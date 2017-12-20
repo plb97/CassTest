@@ -78,9 +78,9 @@
 		37C5A5781FE9166200E1E118 = {
 			isa = PBXGroup;
 			children = (
+				37C5A58B1FE91BC500E1E118 /* Cass.xcodeproj */,
 				373FD3C91FEA75AE00B14377 /* README.md */,
 				373FD3B01FE94E9D00B14377 /* Config.xcconfig */,
-				37C5A58B1FE91BC500E1E118 /* Cass.xcodeproj */,
 				37C5A5831FE9166200E1E118 /* CassTest */,
 				37C5A5821FE9166200E1E118 /* Products */,
 				37C5A5941FE91C9F00E1E118 /* Frameworks */,
