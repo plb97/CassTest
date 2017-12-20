@@ -1,6 +1,6 @@
 #  CassTest
 
-Première tentative **expérimentale** pour utiliser avec le lagngage **Swift** (version 4) d'*Apple* la base NoSQL **Cassandra** (version 9) via le pilote **cpp-driver** de *Datastax*
+Première tentative **expérimentale** pour utiliser avec le langage **Swift** (version 4) d'*Apple* la base NoSQL **Cassandra** (version 9) via le pilote **cpp-driver** de *Datastax*
 
 Tests reprenant les exemples fournis avec le pilote **cpp-driver**.
 
