@@ -45,7 +45,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		373FD3B01FE94E9D00B14377 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = CassTest/Config.xcconfig; sourceTree = "<group>"; };
 		373FD3B11FEA6B1100B14377 /* decimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = decimal.swift; sourceTree = "<group>"; };
 		373FD3B21FEA6B1100B14377 /* collections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = collections.swift; sourceTree = "<group>"; };
 		373FD3B41FEA6B1100B14377 /* maps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = maps.swift; sourceTree = "<group>"; };
@@ -60,6 +59,7 @@
 		373FD3C91FEA75AE00B14377 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		373FD3CA1FEA797100B14377 /* LICENCE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = LICENCE.md; sourceTree = "<group>"; };
 		373FD3CB1FEA797100B14377 /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		373FD3CE1FEA88D200B14377 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		37C5A5811FE9166200E1E118 /* CassTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CassTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37C5A5841FE9166200E1E118 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		37C5A58B1FE91BC500E1E118 /* Cass.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cass.xcodeproj; path = ../Cass/Cass.xcodeproj; sourceTree = "<group>"; };
@@ -84,7 +84,7 @@
 				373FD3CA1FEA797100B14377 /* LICENCE.md */,
 				373FD3CB1FEA797100B14377 /* LICENSE.md */,
 				373FD3C91FEA75AE00B14377 /* README.md */,
-				373FD3B01FE94E9D00B14377 /* Config.xcconfig */,
+				373FD3CE1FEA88D200B14377 /* Config.xcconfig */,
 				37C5A5831FE9166200E1E118 /* CassTest */,
 				37C5A5821FE9166200E1E118 /* Products */,
 				37C5A5941FE91C9F00E1E118 /* Frameworks */,
@@ -335,7 +335,7 @@
 		};
 		37C5A5891FE9166200E1E118 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 373FD3B01FE94E9D00B14377 /* Config.xcconfig */;
+			baseConfigurationReference = 373FD3CE1FEA88D200B14377 /* Config.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UT8MHLKDHU;
@@ -346,7 +346,7 @@
 		};
 		37C5A58A1FE9166200E1E118 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 373FD3B01FE94E9D00B14377 /* Config.xcconfig */;
+			baseConfigurationReference = 373FD3CE1FEA88D200B14377 /* Config.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UT8MHLKDHU;
