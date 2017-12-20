@@ -24,4 +24,3 @@ auth()
 //decimal()
 
 print("*** end")
-
