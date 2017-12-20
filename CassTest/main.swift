@@ -6,7 +6,6 @@
 //  Copyright © 2017 PLHB. All rights reserved.
 //
 
-//import Foundation
 import Cass
 
 print("*** start")
@@ -24,3 +23,4 @@ auth()
 //decimal()
 
 print("*** end")
+
