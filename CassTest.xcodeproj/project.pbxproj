@@ -57,6 +57,7 @@
 		373FD3BA1FEA6B1100B14377 /* simple.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = simple.swift; sourceTree = "<group>"; };
 		373FD3BB1FEA6B1100B14377 /* date_time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = date_time.swift; sourceTree = "<group>"; };
 		373FD3C61FEA6B5700B14377 /* batch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = batch.swift; sourceTree = "<group>"; };
+		373FD3C91FEA75AE00B14377 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		37C5A5811FE9166200E1E118 /* CassTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CassTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37C5A5841FE9166200E1E118 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		37C5A58B1FE91BC500E1E118 /* Cass.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cass.xcodeproj; path = ../Cass/Cass.xcodeproj; sourceTree = "<group>"; };
@@ -77,6 +78,7 @@
 		37C5A5781FE9166200E1E118 = {
 			isa = PBXGroup;
 			children = (
+				373FD3C91FEA75AE00B14377 /* README.md */,
 				373FD3B01FE94E9D00B14377 /* Config.xcconfig */,
 				37C5A58B1FE91BC500E1E118 /* Cass.xcodeproj */,
 				37C5A5831FE9166200E1E118 /* CassTest */,
