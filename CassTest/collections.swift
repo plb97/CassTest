@@ -53,11 +53,11 @@ func insert_into(_ session: Session,_ key: String,_ items: Set<String>) -> () {
     _ = future.check()
 }
 fileprivate
-func select_from(_ session: Session,_ key: String) -> ResultSet {
+func select_from(_ session: Session,_ key: String) -> Result {
     print("select_from_collections...")
     let query = "SELECT key, items FROM examples.collections WHERE key = ?"
     let statement = SimpleStatement(query,key)
-    let rs = ResultSet(session.execute(statement))
+    let rs = session.execute(statement).result
     print("...select_from_collections")
     _ = rs.check()
     return rs

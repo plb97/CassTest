@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		372628141FF3A0620064A392 /* schema_meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372628131FF3A0620064A392 /* schema_meta.swift */; };
 		373FD3BC1FEA6B1100B14377 /* decimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B11FEA6B1100B14377 /* decimal.swift */; };
 		373FD3BD1FEA6B1100B14377 /* collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B21FEA6B1100B14377 /* collections.swift */; };
 		373FD3BE1FEA6B1100B14377 /* maps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B41FEA6B1100B14377 /* maps.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		372628131FF3A0620064A392 /* schema_meta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = schema_meta.swift; sourceTree = "<group>"; };
 		373FD3B11FEA6B1100B14377 /* decimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = decimal.swift; sourceTree = "<group>"; };
 		373FD3B21FEA6B1100B14377 /* collections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = collections.swift; sourceTree = "<group>"; };
 		373FD3B41FEA6B1100B14377 /* maps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = maps.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 		37C5A5831FE9166200E1E118 /* CassTest */ = {
 			isa = PBXGroup;
 			children = (
+				37C5A5841FE9166200E1E118 /* main.swift */,
 				373FD3C61FEA6B5700B14377 /* batch.swift */,
 				373FD3B51FEA6B1100B14377 /* auth.swift */,
 				373FD3B61FEA6B1100B14377 /* basic.swift */,
@@ -113,7 +116,7 @@
 				373FD3B41FEA6B1100B14377 /* maps.swift */,
 				373FD3BA1FEA6B1100B14377 /* simple.swift */,
 				373FD3B81FEA6B1100B14377 /* uuids.swift */,
-				37C5A5841FE9166200E1E118 /* main.swift */,
+				372628131FF3A0620064A392 /* schema_meta.swift */,
 			);
 			path = CassTest;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				37C5A5851FE9166200E1E118 /* main.swift in Sources */,
 				373FD3BF1FEA6B1100B14377 /* auth.swift in Sources */,
 				373FD3BD1FEA6B1100B14377 /* collections.swift in Sources */,
+				372628141FF3A0620064A392 /* schema_meta.swift in Sources */,
 				373FD3C11FEA6B1100B14377 /* bind_by_name.swift in Sources */,
 				373FD3BE1FEA6B1100B14377 /* maps.swift in Sources */,
 				373FD3BC1FEA6B1100B14377 /* decimal.swift in Sources */,

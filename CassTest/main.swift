@@ -10,17 +10,17 @@ import Cass
 
 print("*** start")
 
-//simple()
-//basic()
+simple()
+basic()
 auth()
-//batch()
-//bind_by_name()
-//callbacks()
-//collections()
-//maps()
-//uuids()
-//date_time()
+batch()
+bind_by_name()
+callbacks()
+collections()
+maps()
+uuids()
+date_time()
 //decimal()
-
+schema_meta()
 print("*** end")
 

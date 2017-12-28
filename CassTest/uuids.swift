@@ -54,13 +54,13 @@ func insert_into(session: Session, key: String, time: UUID, entry: String) -> ()
     _ = future.check()
 }
 fileprivate
-func select_from(session: Session, key: String) -> ResultSet {
+func select_from(session: Session, key: String) -> Result {
     print("select_from_log...")
     let query = "SELECT key, time, entry FROM examples.log WHERE key = ?"
     //let statement = SimpleStatement(query, key)
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = ResultSet(session.execute(statement))
+    let rs = session.execute(statement).result
     print("...select_from_log")
     _ = rs.check()
     return rs
@@ -70,7 +70,7 @@ func uuids() {
     print("uuids...")
     let session = getSession()
     create_table(session: session)
-    let gen = UuidGenerator()
+    let gen = UuidGen()
     var uuid: UUID
     uuid = gen.time_uuid()
     //print("*** uuid=\(uuid) \(string(uuid: uuid))")

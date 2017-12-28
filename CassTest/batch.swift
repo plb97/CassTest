@@ -51,10 +51,10 @@ func insert_into(session: Session,_ pairs: [[String]]) -> () {
     let batch = BatchLogged()
     let prepared = prepare_statement(session: session)
     for pair in pairs {
-        batch.add(prepared: prepared, pair)
+        batch.addStatement(prepared: prepared, pair)
     }
-    batch.add(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES ('c', '3');"))
-    batch.add(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES (?, ?);","d","4"))
+    batch.addStatement(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES ('c', '3');"))
+    batch.addStatement(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES (?, ?);","d","4"))
     let future = session.execute(batch: batch)
     print("insert_into...")
     _ = future.check()

@@ -6,16 +6,15 @@
 //  Copyright © 2017 PLB. All rights reserved.
 //
 
+import Foundation
 import Dispatch
 import Cass
 
-var semaphore_: DispatchSemaphore?
+var semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
 let checker = {(_ err_: Cass.Error?) -> Bool in
-    if let err = err_?.error() {
-        print("Error=\(err)")
-        if let semaphore = semaphore_ {
-            semaphore.signal()
-        }
+    if let err = err_?.error {
+        print("*** CHECKER: Error=\(err)")
+        semaphore.signal()
         return false
     }
     return true
@@ -26,7 +25,7 @@ func on_finish(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer? ) -> ()
     if !(future_?.check(checker: checker))! {
         return
     }
-    semaphore_!.signal()
+    semaphore.signal()
     print("...on_finish")
 }
 
@@ -36,7 +35,7 @@ func on_select(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () 
         return
     }
     if let future = future_ {
-        let rs = ResultSet(future)
+        let rs = future.result
         print("rows")
         for row in rs.rows() {
             let key = row.any(0) as! UUID
@@ -46,9 +45,7 @@ func on_select(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () 
         if nil != data_ {
             unowned let session = data_!.bindMemory(to: Session.self, capacity: 1).pointee
             let query = "USE examples;"
-            if !session.execute(SimpleStatement(query), listener: Listener(on_finish,nil)).check(checker: checker) {
-                return
-            }
+            session.execute(SimpleStatement(query), listener: Listener(on_finish,nil))
         }
     }
  print("...on_select")
@@ -63,9 +60,7 @@ func on_insert(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () 
         let query = """
         SELECT key, value FROM examples.callbacks;
         """
-        if !session.execute(SimpleStatement(query), listener: Listener(on_select,data_)).check(checker: checker) {
-            return
-        }
+        session.execute(SimpleStatement(query), listener: Listener(on_select,data_))
     }
     print("...on_insert")
 }
@@ -80,13 +75,11 @@ func on_create_table(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) 
         INSERT INTO examples.callbacks (key, value)
         VALUES (?, ?);
         """
-        let gen = UuidGenerator()
+        let gen = UuidGen()
         let key = gen.time_uuid()
         let value = gen.timestamp(key)
         print("$$$ on_create_table: INSERT INTO key=\(key) value=\(value)")
-        if !session.execute(SimpleStatement(query,key,value), listener: Listener(on_insert,data_)).check(checker: checker) {
-            return
-        }
+        session.execute(SimpleStatement(query,key,value), listener: Listener(on_insert,data_))
     }
     print("...on_create_table")
 }
@@ -101,9 +94,7 @@ func on_create_keyspace(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer
         CREATE TABLE IF NOT EXISTS examples.callbacks
         (key timeuuid PRIMARY KEY, value timestamp);
         """
-        if !session.execute(SimpleStatement(query), listener: Listener(on_create_table,data_)).check(checker: checker) {
-            return
-        }
+        session.execute(SimpleStatement(query), listener: Listener(on_create_table,data_))
     }
     print("...on_create_keyspace")
 }
@@ -119,9 +110,7 @@ func on_session_connect(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer
         CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                                'class': 'SimpleStrategy', 'replication_factor': '3' };
         """
-        if !session.execute(SimpleStatement(query), listener: Listener(on_create_keyspace,data_)).check(checker: checker) {
-            return
-        }
+        session.execute(SimpleStatement(query), listener: Listener(on_create_keyspace,data_))
     }
     print("...on_session_connect")
 }
@@ -135,10 +124,11 @@ func callbacks() {
         data_.deinitialize()
         data_.deallocate(capacity: 1)
     }
-    if Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session, listener: Listener(on_session_connect,data_)).check(checker: checker) {
-        print("waiting")
-        semaphore_ = DispatchSemaphore(value: 0)
-        semaphore_!.wait()
-    }
+    Cluster()
+        .setContactPoints("127.0.0.1")
+        .setCredentials()
+        .connect(session, listener: Listener(on_session_connect,data_))
+    print("waiting")
+    semaphore.wait()
     print("...callbacks")
 }

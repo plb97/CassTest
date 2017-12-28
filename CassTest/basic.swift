@@ -76,13 +76,13 @@ func insert_into(session: Session, key: String, basic: Basic) -> () {
     _ = future.check()
 }
 fileprivate
-func select_from(session: Session, key: String) -> ResultSet {
+func select_from(session: Session, key: String) -> Result {
     print("select_from_basic...")
     let query = "SELECT key, bln, flt, dbl, i32, i64 FROM examples.basic WHERE key = ?"
     //let statement = SimpleStatement(query, key)
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = ResultSet(session.execute(statement))
+    let rs = session.execute(statement).result
     _ = rs.check()
     print("...select_from_basic")
     return rs
@@ -129,5 +129,6 @@ func basic() {
         print("int32",row.any(name: "i32") as! Int32)
         print("int64",row.any(name: "i64") as! Int64)
     }
+
     print("...basic")
 }

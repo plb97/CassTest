@@ -16,9 +16,9 @@ func getSession() -> Session {
 }
 
 fileprivate
-func select_from(session: Session) -> ResultSet {
+func select_from(session: Session) -> Result {
     let query = "SELECT release_version FROM system.local"
-    let rs = ResultSet(session.execute(SimpleStatement(query)))
+    let rs = session.execute(SimpleStatement(query)).result
     _ = rs.check()
     return rs
 }

@@ -28,7 +28,10 @@ func auth() {
         data: credentials
     )
     */
-    _ = getSession()
+    let session = getSession()
+    defer {
+        session.close()
+    }
     print("Successfully connected!")
 
     print("...auth")
