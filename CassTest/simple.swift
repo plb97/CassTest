@@ -11,14 +11,14 @@ import Cass
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
     return session
 }
 
 fileprivate
 func select_from(session: Session) -> Result {
     let query = "SELECT release_version FROM system.local"
-    let rs = session.execute(SimpleStatement(query)).result
+    let rs = session.execute(SimpleStatement(query)).wait().result
     _ = rs.check()
     return rs
 }

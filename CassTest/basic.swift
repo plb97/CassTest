@@ -8,7 +8,8 @@
 
 import Cass
 
-public struct Basic {
+fileprivate
+struct Basic {
     var bln: Bool
     var flt: Float
     var dbl: Double
@@ -17,12 +18,12 @@ public struct Basic {
 }
 
 fileprivate
-let KEY = "test"
+let KEY = "basic_test"
 
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
     return session
 }
 
@@ -33,7 +34,7 @@ func create_keyspace(session: Session) -> () {
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                            'class': 'SimpleStrategy', 'replication_factor': '3' };
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
     _ = future.check()
 }
@@ -47,13 +48,13 @@ func create_table(session: Session) -> () {
                                               i32 int, i64 bigint,
                                               PRIMARY KEY (key));
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
     _ = future.check()
 }
 fileprivate
 func insert_into(session: Session, key: String, basic: Basic) -> () {
-    print("insert_into_basic...")
+    print("insert_into...")
     let query = "INSERT INTO examples.basic (key, bln, flt, dbl, i32, i64) VALUES (?, ?, ?, ?, ?, ?);"
     let statement = SimpleStatement(query,
                                     key,
@@ -71,20 +72,20 @@ func insert_into(session: Session, key: String, basic: Basic) -> () {
                     "i64": basic.i64,
                     ]
     let statement = SimpleStatement(query, map: map)*/
-    let future = session.execute(statement)
-    print("...insert_into_basic")
+    let future = session.execute(statement).wait()
+    print("...insert_into")
     _ = future.check()
 }
 fileprivate
 func select_from(session: Session, key: String) -> Result {
-    print("select_from_basic...")
+    print("select_from...")
     let query = "SELECT key, bln, flt, dbl, i32, i64 FROM examples.basic WHERE key = ?"
     //let statement = SimpleStatement(query, key)
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = session.execute(statement).result
+    let rs = session.execute(statement).wait().result
     _ = rs.check()
-    print("...select_from_basic")
+    print("...select_from")
     return rs
 }
 

@@ -14,7 +14,7 @@ let KEY = "test"
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
     return session
 }
 
@@ -25,7 +25,7 @@ func create_keyspace(session: Session) -> () {
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                            'class': 'SimpleStrategy', 'replication_factor': '3' };
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
     _ = future.check()
 }
@@ -37,7 +37,7 @@ func create_table(session: Session) -> () {
                                                     items set<text>,
                                                     PRIMARY KEY (key));
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
     _ = future.check()
 }
@@ -48,7 +48,7 @@ func insert_into(_ session: Session,_ key: String,_ items: Set<String>) -> () {
     let statement = SimpleStatement(query,
                                     key,
                                     items)
-    let future = session.execute(statement)
+    let future = session.execute(statement).wait()
     print("...insert_into_collections")
     _ = future.check()
 }
@@ -57,7 +57,7 @@ func select_from(_ session: Session,_ key: String) -> Result {
     print("select_from_collections...")
     let query = "SELECT key, items FROM examples.collections WHERE key = ?"
     let statement = SimpleStatement(query,key)
-    let rs = session.execute(statement).result
+    let rs = session.execute(statement).wait().result
     print("...select_from_collections")
     _ = rs.check()
     return rs

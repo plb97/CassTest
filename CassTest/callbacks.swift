@@ -10,8 +10,8 @@ import Foundation
 import Dispatch
 import Cass
 
-var semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
-let checker = {(_ err_: Cass.Error?) -> Bool in
+fileprivate var semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
+fileprivate let checker = {(_ err_: Cass.Error?) -> Bool in
     if let err = err_?.error {
         print("*** CHECKER: Error=\(err)")
         semaphore.signal()
@@ -20,7 +20,7 @@ let checker = {(_ err_: Cass.Error?) -> Bool in
     return true
 }
 
-func on_finish(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer? ) -> () {
+fileprivate func on_finish(_ future_: Future?, _ data_: UnsafeMutableRawPointer? ) -> () {
     print("on_finish...")
     if !(future_?.check(checker: checker))! {
         return
@@ -29,7 +29,7 @@ func on_finish(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer? ) -> ()
     print("...on_finish")
 }
 
-func on_select(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () {
+fileprivate func on_select(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
     print("on_select...")
     if !(future_?.check(checker: checker))! {
         return
@@ -50,7 +50,7 @@ func on_select(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () 
     }
  print("...on_select")
 }
-func on_insert(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () {
+fileprivate func on_insert(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
     print("on_insert...")
     if !(future_?.check(checker: checker))! {
         return
@@ -64,7 +64,7 @@ func on_insert(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () 
     }
     print("...on_insert")
 }
-func on_create_table(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () {
+fileprivate func on_create_table(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
     print("on_create_table...")
     if !(future_?.check(checker: checker))! {
         return
@@ -83,7 +83,7 @@ func on_create_table(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) 
     }
     print("...on_create_table")
 }
-func on_create_keyspace(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer?) -> () {
+fileprivate func on_create_keyspace(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
     print("on_create_keyspace...")
     if !(future_?.check(checker: checker))! {
         return
@@ -99,7 +99,7 @@ func on_create_keyspace(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer
     print("...on_create_keyspace")
 }
 
-func on_session_connect(_ future_: FutureBase?, _ data_: UnsafeMutableRawPointer? ) -> () {
+fileprivate func on_session_connect(_ future_: Future?, _ data_: UnsafeMutableRawPointer? ) -> () {
     print("on_session_connect...")
     if !(future_?.check(checker: checker))! {
         return

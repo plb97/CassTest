@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		372628141FF3A0620064A392 /* schema_meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372628131FF3A0620064A392 /* schema_meta.swift */; };
+		3726281E1FF6721D0064A392 /* duration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3726281D1FF6721D0064A392 /* duration.swift */; };
+		372628201FF6A07F0064A392 /* async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3726281F1FF6A07F0064A392 /* async.swift */; };
+		372CF79A1FF9237700D0ABC9 /* named_parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372CF7991FF9237700D0ABC9 /* named_parameters.swift */; };
+		372CF79D1FF9265F00D0ABC9 /* prepared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372CF79C1FF9265F00D0ABC9 /* prepared.swift */; };
 		373FD3BC1FEA6B1100B14377 /* decimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B11FEA6B1100B14377 /* decimal.swift */; };
 		373FD3BD1FEA6B1100B14377 /* collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B21FEA6B1100B14377 /* collections.swift */; };
 		373FD3BE1FEA6B1100B14377 /* maps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B41FEA6B1100B14377 /* maps.swift */; };
@@ -47,6 +51,10 @@
 
 /* Begin PBXFileReference section */
 		372628131FF3A0620064A392 /* schema_meta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = schema_meta.swift; sourceTree = "<group>"; };
+		3726281D1FF6721D0064A392 /* duration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = duration.swift; sourceTree = "<group>"; };
+		3726281F1FF6A07F0064A392 /* async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = async.swift; sourceTree = "<group>"; };
+		372CF7991FF9237700D0ABC9 /* named_parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = named_parameters.swift; sourceTree = "<group>"; };
+		372CF79C1FF9265F00D0ABC9 /* prepared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepared.swift; sourceTree = "<group>"; };
 		373FD3B11FEA6B1100B14377 /* decimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = decimal.swift; sourceTree = "<group>"; };
 		373FD3B21FEA6B1100B14377 /* collections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = collections.swift; sourceTree = "<group>"; };
 		373FD3B41FEA6B1100B14377 /* maps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = maps.swift; sourceTree = "<group>"; };
@@ -105,18 +113,22 @@
 			isa = PBXGroup;
 			children = (
 				37C5A5841FE9166200E1E118 /* main.swift */,
-				373FD3C61FEA6B5700B14377 /* batch.swift */,
+				3726281F1FF6A07F0064A392 /* async.swift */,
 				373FD3B51FEA6B1100B14377 /* auth.swift */,
 				373FD3B61FEA6B1100B14377 /* basic.swift */,
+				373FD3C61FEA6B5700B14377 /* batch.swift */,
 				373FD3B71FEA6B1100B14377 /* bind_by_name.swift */,
 				373FD3B91FEA6B1100B14377 /* callbacks.swift */,
 				373FD3B21FEA6B1100B14377 /* collections.swift */,
 				373FD3BB1FEA6B1100B14377 /* date_time.swift */,
 				373FD3B11FEA6B1100B14377 /* decimal.swift */,
+				3726281D1FF6721D0064A392 /* duration.swift */,
 				373FD3B41FEA6B1100B14377 /* maps.swift */,
+				372CF7991FF9237700D0ABC9 /* named_parameters.swift */,
+				372CF79C1FF9265F00D0ABC9 /* prepared.swift */,
+				372628131FF3A0620064A392 /* schema_meta.swift */,
 				373FD3BA1FEA6B1100B14377 /* simple.swift */,
 				373FD3B81FEA6B1100B14377 /* uuids.swift */,
-				372628131FF3A0620064A392 /* schema_meta.swift */,
 			);
 			path = CassTest;
 			sourceTree = "<group>";
@@ -215,8 +227,12 @@
 				373FD3C01FEA6B1100B14377 /* basic.swift in Sources */,
 				373FD3C31FEA6B1100B14377 /* callbacks.swift in Sources */,
 				373FD3C71FEA6B5700B14377 /* batch.swift in Sources */,
+				3726281E1FF6721D0064A392 /* duration.swift in Sources */,
+				372CF79D1FF9265F00D0ABC9 /* prepared.swift in Sources */,
 				37C5A5851FE9166200E1E118 /* main.swift in Sources */,
 				373FD3BF1FEA6B1100B14377 /* auth.swift in Sources */,
+				372628201FF6A07F0064A392 /* async.swift in Sources */,
+				372CF79A1FF9237700D0ABC9 /* named_parameters.swift in Sources */,
 				373FD3BD1FEA6B1100B14377 /* collections.swift in Sources */,
 				372628141FF3A0620064A392 /* schema_meta.swift in Sources */,
 				373FD3C11FEA6B1100B14377 /* bind_by_name.swift in Sources */,

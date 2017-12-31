@@ -1,15 +1,12 @@
 //
-//  bind_by_name.swift
-//  cpp-driver
+//  prepared.swift
+//  CassTest
 //
-//  Created by Philippe on 25/10/2017.
-//  Copyright © 2017 PLB. All rights reserved.
+//  Created by Philippe on 31/12/2017.
+//  Copyright © 2017 PLHB. All rights reserved.
 //
 
 import Cass
-
-fileprivate
-let KEY = "prepared_test"
 
 fileprivate
 struct Basic {
@@ -21,9 +18,12 @@ struct Basic {
 }
 
 fileprivate
+let KEY = "prepared_test"
+
+fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
     return session
 }
 
@@ -34,7 +34,7 @@ func create_keyspace(session: Session) -> () {
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                            'class': 'SimpleStrategy', 'replication_factor': '3' };
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
     _ = future.check()
 }
@@ -48,7 +48,7 @@ func create_table(session: Session) -> () {
                                               i32 int, i64 bigint,
                                               PRIMARY KEY (key));
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
     _ = future.check()
 }
@@ -72,7 +72,7 @@ func insert_into(session: Session, key: String, basic: Basic) -> () {
      "i64": basic.i64,
      ]
      let statement = SimpleStatement(query, map: map)*/
-    let future = session.execute(statement)
+    let future = session.execute(statement).wait()
     print("...insert_into")
     _ = future.check()
 }
@@ -83,15 +83,28 @@ func select_from(session: Session, key: String) -> Result {
     //let statement = SimpleStatement(query, key)
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = session.execute(statement).result
-    print("...select_from")
+    let rs = session.execute(statement).wait().result
     _ = rs.check()
+    print("...select_from")
+    return rs
+}
+fileprivate
+func prepared_select_from(session: Session, key: String) -> Result {
+    print("prepared_select_from...")
+    let query = "SELECT key, bln, flt, dbl, i32, i64 FROM examples.basic WHERE key = ?"
+    let prepared = session.prepare(query)
+//    let map = ["key": key]
+//    let rs = session.execute(prepared: prepared, map: map).wait().result
+    let rs = session.execute(prepared: prepared, key).wait().result
+    _ = rs.check()
+    print("...prepared_select_from")
     return rs
 }
 
-func bind_by_name() {
-    print("bind_by_name...")
+func prepared() {
+    print("prepared...")
     let session = getSession()
+
     create_keyspace(session: session)
     create_table(session: session)
     let basic = Basic(bln: true, flt: 0.001, dbl: 0.0002, i32: 3, i64: 4)
@@ -100,21 +113,20 @@ func bind_by_name() {
     let rs = select_from(session: session, key: KEY)
     /*print("first")
      if let row = rs.first() {
-         //print("key=",row.any(0) as! String)
-         //let basic = Basic(bln: row.any(1) as! Bool,
-         //                  flt: row.any(2) as! Float,
-         //                  dbl: row.any(3) as! Double,
-         //                  i32: row.any(4) as! Int32,
-         //                  i64: row.any(5) as! Int64)
-         //print("basic=",basic)
-         print("string key",row.any(name: "key") as! String)
-         print("bool BLN",row.any(name: "BLN") as! Bool)
-         print("float flt",row.any(name: "flt") as! Float)
-         print("double dbl",row.any(name: "dbl") as! Double)
-         print("int32 \"i32\"",row.any(name: "\"i32\"") as! Int32)
-         print("int64 i64",row.any(name: "i64") as! Int64)
+     //let basic = Basic(bln: row.any(1) as! Bool,
+     //                  flt: row.any(2) as! Float,
+     //                  dbl: row.any(3) as! Double,
+     //                  i32: row.any(4) as! Int32,
+     //                  i64: row.any(5) as! Int64)
+     //print("basic=",basic)
+     print("string",row.any(name: "key") as! String)
+     print("bool",row.any(name: "bln") as! Bool)
+     print("float",row.any(name: "flt") as! Float)
+     print("double",row.any(name: "dbl") as! Double)
+     print("int32",row.any(name: "i32") as! Int32)
+     print("int64",row.any(name: "i64") as! Int64)
      }*/
-    print("*** rows ***")
+    print("rows")
     for row in rs.rows() {
         //print("key=",row.any(0) as! String)
         //let basic = Basic(bln: row.any(1) as! Bool,
@@ -123,12 +135,14 @@ func bind_by_name() {
         //                  i32: row.any(4) as! Int32,
         //                  i64: row.any(5) as! Int64)
         //print("basic=",basic)
-        print("string key",row.any(name: "key") as! String)
-        print("bool BLN",row.any(name: "BLN") as! Bool)
-        print("float flt",row.any(name: "flt") as! Float)
-        print("double dbl",row.any(name: "dbl") as! Double)
-        print("int32 \"i32\"",row.any(name: "\"i32\"") as! Int32)
-        print("int64 i64",row.any(name: "i64") as! Int64)
+        print("string",row.any(name: "key") as! String)
+        print("bool",row.any(name: "bln") as! Bool)
+        print("float",row.any(name: "flt") as! Float)
+        print("double",row.any(name: "dbl") as! Double)
+        print("int32",row.any(name: "i32") as! Int32)
+        print("int64",row.any(name: "i64") as! Int64)
     }
-    print("...bind_by_name")
+
+    print("...prepared")
 }
+

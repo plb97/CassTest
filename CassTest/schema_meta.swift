@@ -16,7 +16,7 @@ let KEY = "test"
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
     return session
 }
 
@@ -27,7 +27,7 @@ func create_keyspace(session: Session) -> () {
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                            'class': 'SimpleStrategy', 'replication_factor': '3' };
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
     _ = future.check()
 }
@@ -39,7 +39,7 @@ func create_table(session: Session) -> () {
                   value bigint,
                   PRIMARY KEY (key));
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
     _ = future.check()
 }
@@ -57,7 +57,7 @@ func create_functions(session: Session) -> () {
                     return state;'
                   ;
     """
-    var future = session.execute(SimpleStatement(query))
+    var future = session.execute(SimpleStatement(query)).wait()
     _ = future.check()
     query = """
     CREATE OR REPLACE FUNCTION examples.avg_state(state tuple<int, bigint>, val int)
@@ -70,14 +70,14 @@ func create_functions(session: Session) -> () {
     return state;'
     ;
     """
-    future = session.execute(SimpleStatement(query))
+    future = session.execute(SimpleStatement(query)).wait()
     _ = future.check()
     query = """
     CREATE OR REPLACE AGGREGATE examples.average(int)
     SFUNC avg_state STYPE tuple<int, bigint> FINALFUNC avg_final
     INITCOND(0, 0);
     """
-    future = session.execute(SimpleStatement(query))
+    future = session.execute(SimpleStatement(query)).wait()
     _ = future.check()
     print("...create_functions")
 }

@@ -22,7 +22,7 @@ func create_keyspace(session: Session) -> () {
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                            'class': 'SimpleStrategy', 'replication_factor': '3' };
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
     _ = future.check()
 }
@@ -34,7 +34,7 @@ func create_table(session: Session) -> () {
                                               value text,
                                               PRIMARY KEY (key));
     """
-    let future = session.execute(SimpleStatement(query))
+    let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
     _ = future.check()
 }
@@ -55,7 +55,7 @@ func insert_into(session: Session,_ pairs: [[String]]) -> () {
     }
     batch.addStatement(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES ('c', '3');"))
     batch.addStatement(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES (?, ?);","d","4"))
-    let future = session.execute(batch: batch)
+    let future = session.execute(batch: batch).wait()
     print("insert_into...")
     _ = future.check()
 }

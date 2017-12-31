@@ -6,21 +6,24 @@
 //  Copyright © 2017 PLHB. All rights reserved.
 //
 
-import Cass
-
 print("*** start")
 
-simple()
-basic()
-auth()
-batch()
-bind_by_name()
-callbacks()
-collections()
-maps()
-uuids()
-date_time()
-//decimal()
-schema_meta()
+//async()
+//auth()
+//basic()
+//batch()
+//bind_by_name()
+//callbacks()
+//collections()
+//date_time()
+////decimal()
+//duration()
+//maps()
+//named_parameters()
+prepared()
+//schema_meta()
+//simple()
+//uuids()
+
 print("*** end")
 
