@@ -63,13 +63,12 @@ func dataCleanupCallback(resp: Response) -> () {
 fileprivate
 func getSession(authenticatorCallbacks: AuthenticatorCallbacks) -> Session {
     let session = Session()
-//    _ = Cluster().setContactPoints("127.0.0.1,127.0.0.2,127.0.0.3")
-    _ = Cluster().setContactPoints("127.0.0.1")
-//        .setCredentials()
-        .setAuthenticatorCallbacks(authenticatorCallbacks)
-        .connect(session)
-//        .wait()
-        .check()
+        _ = session.connect(Cluster()
+//            .setContactPoints("127.0.0.1,127.0.0.2,127.0.0.3")
+//            .setCredentials()
+            .setContactPoints("127.0.0.1")
+            .setAuthenticatorCallbacks(authenticatorCallbacks))
+            .check()
     return session
 }
 func auth() {
@@ -83,7 +82,7 @@ func auth() {
         response: Credentials())
     let session = getSession(authenticatorCallbacks: authenticatorCallbacks)
     defer {
-       _ = session.close().wait()
+       session.close().wait()
     }
     print("Successfully connected!")
 

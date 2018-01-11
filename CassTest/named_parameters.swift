@@ -23,7 +23,7 @@ let KEY = "named_parameters_test"
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials()).wait().check()
     return session
 }
 
@@ -36,7 +36,7 @@ func create_keyspace(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func create_table(session: Session) -> () {
@@ -50,7 +50,7 @@ func create_table(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func insert_into(session: Session, key: String, basic: Basic) -> () {
@@ -67,7 +67,7 @@ func insert_into(session: Session, key: String, basic: Basic) -> () {
     let statement = SimpleStatement(query, map: map)
     let future = session.execute(statement).wait()
     print("...insert_into")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func select_from(session: Session, key: String) -> Result {
@@ -76,10 +76,10 @@ func select_from(session: Session, key: String) -> Result {
     //let statement = SimpleStatement(query, key)
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = session.execute(statement).wait().result
-    _ = rs.check()
+    let future = session.execute(statement)
+    future.wait().check()
     print("...select_from")
-    return rs
+    return future.result
 }
 
 func named_parameters() {
@@ -93,7 +93,7 @@ func named_parameters() {
     insert_into(session: session, key: KEY, basic: basic)
     let rs = select_from(session: session, key: KEY)
     /*print("first")
-     if let row = rs.first() {
+     if let row = rs.first {
      //let basic = Basic(bln: row.any(1) as! Bool,
      //                  flt: row.any(2) as! Float,
      //                  dbl: row.any(3) as! Double,
@@ -108,7 +108,7 @@ func named_parameters() {
      print("int64",row.any(name: "i64") as! Int64)
      }*/
     print("rows")
-    for row in rs.rows() {
+    for row in rs.rows {
         //print("key=",row.any(0) as! String)
         //let basic = Basic(bln: row.any(1) as! Bool,
         //                  flt: row.any(2) as! Float,

@@ -14,7 +14,7 @@ let KEY = "test"
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials()).wait().check()
     return session
 }
 
@@ -27,7 +27,7 @@ func create_keyspace(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func create_table(session: Session) -> () {
@@ -39,7 +39,7 @@ func create_table(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func insert_into(_ session: Session,_ key: String,_ items: Set<String>) -> () {
@@ -50,17 +50,17 @@ func insert_into(_ session: Session,_ key: String,_ items: Set<String>) -> () {
                                     items)
     let future = session.execute(statement).wait()
     print("...insert_into_collections")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func select_from(_ session: Session,_ key: String) -> Result {
     print("select_from_collections...")
     let query = "SELECT key, items FROM examples.collections WHERE key = ?"
     let statement = SimpleStatement(query,key)
-    let rs = session.execute(statement).wait().result
+    let future = session.execute(statement).wait()
+    future.check()
     print("...select_from_collections")
-    _ = rs.check()
-    return rs
+    return future.result
 }
 
 func collections() {
@@ -81,7 +81,7 @@ func collections() {
      print("key=\(key) items=\(row.set_string(name: "items"))")
      }*/
     print("rows")
-    for row in rs.rows() {
+    for row in rs.rows {
         //let key = row.any(0) as! String
         //let items = row.any(1) as! Set<String>
         let key = row.any(0) as! String

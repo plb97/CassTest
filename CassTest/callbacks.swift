@@ -6,13 +6,12 @@
 //  Copyright © 2017 PLB. All rights reserved.
 //
 
-import Foundation
 import Dispatch
 import Cass
 
 fileprivate var semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
-fileprivate let checker = {(_ err_: Cass.Error?) -> Bool in
-    if let err = err_?.error {
+fileprivate let checker = {(_ err: Cass.Error) -> Bool in
+    if !err.ok {
         print("*** CHECKER: Error=\(err)")
         semaphore.signal()
         return false
@@ -20,97 +19,120 @@ fileprivate let checker = {(_ err_: Cass.Error?) -> Bool in
     return true
 }
 
-fileprivate func on_finish(_ future_: Future?, _ data_: UnsafeMutableRawPointer? ) -> () {
+fileprivate func on_finish(_ parm: Listener_t) -> () {
     print("on_finish...")
-    if !(future_?.check(checker: checker))! {
+    if !(parm.future.check(checker: checker)) {
+        print("*** \(parm.future.errorMessage)")
         return
     }
     semaphore.signal()
     print("...on_finish")
 }
 
-fileprivate func on_select(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
+fileprivate func on_select(_ parm: Listener_t) -> () {
     print("on_select...")
-    if !(future_?.check(checker: checker))! {
+    if !(parm.future.check(checker: checker)) {
+        print("*** \(parm.future.errorMessage)")
         return
     }
-    if let future = future_ {
-        let rs = future.result
+    if let data = parm.dataPointer {
+        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let listener = Listener(callback: on_finish, data: session)
+        let rs = parm.future.result
         print("rows")
-        for row in rs.rows() {
+        for row in rs.rows {
             let key = row.any(0) as! UUID
             let value = row.any(1) as! Date
             print("key=\(key) value=\(value)")
         }
-        if nil != data_ {
-            unowned let session = data_!.bindMemory(to: Session.self, capacity: 1).pointee
-            let query = "USE examples;"
-            session.execute(SimpleStatement(query), listener: Listener(on_finish,nil))
-        }
+        let query = "USE examples;"
+        session.execute(SimpleStatement(query), listener: listener)
+    } else {
+        fatalError("Ne devrait pas arriver")
     }
- print("...on_select")
+    print("...on_select")
 }
-fileprivate func on_insert(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
+
+fileprivate func on_insert(_ parm: Listener_t) -> () {
     print("on_insert...")
-    if !(future_?.check(checker: checker))! {
+    if !(parm.future.check(checker: checker)) {
+        print("*** \(parm.future.errorMessage)")
         return
     }
-    if nil != data_ {
-        unowned let session = data_!.bindMemory(to: Session.self, capacity: 1).pointee
+    if let data = parm.dataPointer {
         let query = """
         SELECT key, value FROM examples.callbacks;
         """
-        session.execute(SimpleStatement(query), listener: Listener(on_select,data_))
+        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let listener = Listener(callback: on_select, data: session)
+        session.execute(SimpleStatement(query), listener: listener)
+    } else {
+        fatalError("Ne devrait pas arriver")
     }
     print("...on_insert")
 }
-fileprivate func on_create_table(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
+
+
+fileprivate func on_create_table(_ parm: Listener_t) -> () {
     print("on_create_table...")
-    if !(future_?.check(checker: checker))! {
+    if !(parm.future.check(checker: checker)) {
+        print("*** \(parm.future.errorMessage)")
         return
     }
-    if let data = data_ {
-        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+    if let data = parm.dataPointer {
         let query = """
         INSERT INTO examples.callbacks (key, value)
         VALUES (?, ?);
         """
+        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let listener = Listener(callback: on_insert, data: session)
         let gen = UuidGen()
         let key = gen.time_uuid()
         let value = gen.timestamp(key)
-        print("$$$ on_create_table: INSERT INTO key=\(key) value=\(value)")
-        session.execute(SimpleStatement(query,key,value), listener: Listener(on_insert,data_))
+        print("$$$ on_create_table: \(query) key=\(key) value=\(value)")
+        session.execute(SimpleStatement(query,key,value), listener: listener)
+    } else {
+        fatalError("Ne devrait pas arriver")
     }
     print("...on_create_table")
 }
-fileprivate func on_create_keyspace(_ future_: Future?, _ data_: UnsafeMutableRawPointer?) -> () {
+
+fileprivate func on_create_keyspace(_ parm: Listener_t) -> () {
     print("on_create_keyspace...")
-    if !(future_?.check(checker: checker))! {
+    if !(parm.future.check(checker: checker)) {
+        print("*** \(parm.future.errorMessage)")
         return
     }
-    if nil != data_ {
-        unowned let session = data_!.bindMemory(to: Session.self, capacity: 1).pointee
+    if let data = parm.dataPointer {
         let query = """
         CREATE TABLE IF NOT EXISTS examples.callbacks
         (key timeuuid PRIMARY KEY, value timestamp);
         """
-        session.execute(SimpleStatement(query), listener: Listener(on_create_table,data_))
+        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let listener = Listener(callback: on_create_table, data: session)
+        session.execute(SimpleStatement(query), listener: listener)
+    } else {
+        fatalError("Ne devrait pas arriver")
     }
     print("...on_create_keyspace")
 }
 
-fileprivate func on_session_connect(_ future_: Future?, _ data_: UnsafeMutableRawPointer? ) -> () {
+fileprivate func on_session_connect(_ parm: Listener_t) -> () {
     print("on_session_connect...")
-    if !(future_?.check(checker: checker))! {
+    if !(parm.future.check(checker: checker)) {
+        print("*** \(parm.future.errorMessage)")
         return
     }
-    if nil != data_ {
-        unowned let session = data_!.bindMemory(to: Session.self, capacity: 1).pointee
+    if let data = parm.dataPointer {
         let query = """
         CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                                'class': 'SimpleStrategy', 'replication_factor': '3' };
         """
-        session.execute(SimpleStatement(query), listener: Listener(on_create_keyspace,data_))
+        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let listener = Listener(callback: on_create_keyspace, data: session)
+        session.execute(SimpleStatement(query), listener: listener)
+    } else {
+        fatalError("Ne devrait pas arriver")
     }
     print("...on_session_connect")
 }
@@ -118,16 +140,8 @@ fileprivate func on_session_connect(_ future_: Future?, _ data_: UnsafeMutableRa
 func callbacks() {
     print("callbacks...")
     let session = Session()
-    let data_ = UnsafeMutablePointer<Session>.allocate(capacity: 1)
-    data_.initialize(to: session)
-    defer {
-        data_.deinitialize()
-        data_.deallocate(capacity: 1)
-    }
-    Cluster()
-        .setContactPoints("127.0.0.1")
-        .setCredentials()
-        .connect(session, listener: Listener(on_session_connect,data_))
+    let listener = Listener(callback: on_session_connect, data: session)
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials(), listener: listener)
     print("waiting")
     semaphore.wait()
     print("...callbacks")

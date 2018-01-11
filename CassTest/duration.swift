@@ -14,7 +14,7 @@ fileprivate let NANOS_IN_A_SEC: Int64 = 1_000_000_000
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials()).wait().check()
     return session
 }
 fileprivate
@@ -26,7 +26,7 @@ func create_keyspace(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func create_table(session: Session) -> () {
@@ -37,7 +37,7 @@ func create_table(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func insert_into(session: Session, key: String, months: Int32, days: Int32, nanos: Int64) -> () {
@@ -48,7 +48,7 @@ func insert_into(session: Session, key: String, months: Int32, days: Int32, nano
                                     Duration(months: months, days: days, nanos: nanos))
     let future = session.execute(statement).wait()
     print("...insert_into")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func select_from(session: Session, key: String) -> Result {
@@ -56,10 +56,10 @@ func select_from(session: Session, key: String) -> Result {
     let query = "SELECT key, d FROM examples.duration WHERE key = ?;"
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = session.execute(statement).wait().result
+    let future = session.execute(statement)
+    future.wait().check()
     print("...select_from")
-    _ = rs.check()
-    return rs
+    return future.result
 }
 
 func duration() {
@@ -75,21 +75,21 @@ func duration() {
     var rs: Result
     print("**** rows")
     rs = select_from(session: session, key: "zero");
-    for row in rs.rows() {
+    for row in rs.rows {
         let key = row.any(0) as! String
         let d = row.any(1) as! Duration
         print("*** key=\(key) months=\(d.months) days=\(d.days) nanos=\(d.nanos)")
     }
     print("**** rows")
     rs = select_from(session: session, key: "one_month_two_days_three_seconds");
-    for row in rs.rows() {
+    for row in rs.rows {
         let key = row.any(0) as! String
         let d = row.any(1) as! Duration
         print("*** key=\(key) months=\(d.months) days=\(d.days) nanos=\(d.nanos)")
     }
     print("**** rows")
     rs = select_from(session: session, key: "negative_one_month_two_days_three_seconds");
-    for row in rs.rows() {
+    for row in rs.rows {
         let key = row.any(0) as! String
         let d = row.any(1) as! Duration
         print("*** key=\(key) months=\(d.months) days=\(d.days) nanos=\(d.nanos)")

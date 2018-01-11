@@ -11,7 +11,7 @@ import Cass
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials()).wait().check()
     return session
 }
 
@@ -24,7 +24,7 @@ func create_keyspace(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func create_table(session: Session) -> () {
@@ -36,28 +36,29 @@ func create_table(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
-    _ = future.check()
-}
-fileprivate
-func prepare_statement(session: Session) -> PreparedStatement {
-    let query = "INSERT INTO examples.pairs (key, value) VALUES (?, ?);"
-    let prepared = session.prepare(query)
-    _ = prepared.check()
-    return prepared
+    future.check()
 }
 fileprivate
 func insert_into(session: Session,_ pairs: [[String]]) -> () {
     print("insert_into...")
     let batch = BatchLogged()
-    let prepared = prepare_statement(session: session)
+    let query = "INSERT INTO examples.pairs (key, value) VALUES (?, ?);"
+
+    let prepare = session.prepare(query).wait()
+    prepare.check()
+    let prepared = prepare.prepared
+    //    let map = ["key": key]
     for pair in pairs {
-        batch.addStatement(prepared: prepared, pair)
+        batch.addStatement(prepared.statement.bind(pair[0],pair[1])).check()
     }
-    batch.addStatement(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES ('c', '3');"))
-    batch.addStatement(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES (?, ?);","d","4"))
+//    for pair in pairs {
+//        batch.addStatement(SimpleStatement(query, pair[0],pair[1])).check()
+//    }
+    batch.addStatement(SimpleStatement("INSERT INTO examples.pairs (key, value) VALUES ('c', '3');")).check()
+    batch.addStatement(SimpleStatement(query,"d","4")).check()
     let future = session.execute(batch: batch).wait()
-    print("insert_into...")
-    _ = future.check()
+    print("...insert_into")
+    future.check()
 }
 
 func batch() {

@@ -23,7 +23,9 @@ let KEY = "basic_test"
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).wait().check()
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials())
+        .wait()
+        .check()
     return session
 }
 
@@ -36,7 +38,7 @@ func create_keyspace(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_keyspace")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func create_table(session: Session) -> () {
@@ -50,10 +52,10 @@ func create_table(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
-    _ = future.check()
+    future.check()
 }
 fileprivate
-func insert_into(session: Session, key: String, basic: Basic) -> () {
+func insert_into(session: Session, key: String, basic: Basic) {
     print("insert_into...")
     let query = "INSERT INTO examples.basic (key, bln, flt, dbl, i32, i64) VALUES (?, ?, ?, ?, ?, ?);"
     let statement = SimpleStatement(query,
@@ -74,19 +76,19 @@ func insert_into(session: Session, key: String, basic: Basic) -> () {
     let statement = SimpleStatement(query, map: map)*/
     let future = session.execute(statement).wait()
     print("...insert_into")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func select_from(session: Session, key: String) -> Result {
     print("select_from...")
     let query = "SELECT key, bln, flt, dbl, i32, i64 FROM examples.basic WHERE key = ?"
-    //let statement = SimpleStatement(query, key)
-    let map = ["key": key]
-    let statement = SimpleStatement(query, map: map)
-    let rs = session.execute(statement).wait().result
-    _ = rs.check()
+    let statement = SimpleStatement(query, key)
+//    let map = ["key": key]
+//    let statement = SimpleStatement(query, map: map)
+    let future = session.execute(statement).wait()
+    future.check()
     print("...select_from")
-    return rs
+    return future.result
 }
 
 func basic() {
@@ -115,7 +117,7 @@ func basic() {
          print("int64",row.any(name: "i64") as! Int64)
      }*/
     print("rows")
-    for row in rs.rows() {
+    for row in rs.rows {
         //print("key=",row.any(0) as! String)
         //let basic = Basic(bln: row.any(1) as! Bool,
         //                  flt: row.any(2) as! Float,

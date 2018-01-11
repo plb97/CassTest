@@ -15,7 +15,7 @@ let KEY = "test"
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials()).wait().check()
     return session
 }
 
@@ -28,7 +28,7 @@ func create_keyspace(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query))
     print("...create_keyspace")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func create_table(session: Session) -> () {
@@ -38,7 +38,7 @@ func create_table(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query))
     print("...create_table")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func insert_into(session: Session, key: String, decimal: Decimal) -> () {
@@ -49,7 +49,7 @@ func insert_into(session: Session, key: String, decimal: Decimal) -> () {
                                     decimal)
     let future = session.execute(statement)
     print("...insert_into")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func select_from(session: Session, key: String) -> Result {
@@ -58,10 +58,10 @@ func select_from(session: Session, key: String) -> Result {
     //let statement = SimpleStatement(query, key)
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = session.execute(statement).result
+    let future = session.execute(statement)
+    future.wait().check()
     print("...select_from")
-    _ = rs.check()
-    return rs
+    return future.result
 }
 
 func decimal() {
@@ -76,7 +76,7 @@ func decimal() {
     insert_into(session: session, key: KEY, decimal: dec)
     let rs = select_from(session: session, key: KEY)
     /*print("first")
-     if let row = rs.first() {
+     if let row = rs.first {
          print("row=\(row)")
          let key = row.any(0) as! String
          if let d = row.any(1) as? Decimal {
@@ -84,7 +84,7 @@ func decimal() {
          }
      }*/
     print("rows")
-    for row in rs.rows() {
+    for row in rs.rows {
         print("row=\(row)")
         let key = row.any(0) as! String
         if let d = row.any(1) as? Decimal {

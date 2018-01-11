@@ -23,7 +23,7 @@ struct Basic {
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    _ = Cluster().setContactPoints("127.0.0.1").setCredentials().connect(session).check()
+    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials()).wait().check()
     return session
 }
 
@@ -36,7 +36,7 @@ func create_keyspace(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query))
     print("...create_keyspace")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func create_table(session: Session) -> () {
@@ -50,7 +50,7 @@ func create_table(session: Session) -> () {
     """
     let future = session.execute(SimpleStatement(query))
     print("...create_table")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func insert_into(session: Session, key: String, basic: Basic) -> () {
@@ -74,7 +74,7 @@ func insert_into(session: Session, key: String, basic: Basic) -> () {
      let statement = SimpleStatement(query, map: map)*/
     let future = session.execute(statement)
     print("...insert_into")
-    _ = future.check()
+    future.check()
 }
 fileprivate
 func select_from(session: Session, key: String) -> Result {
@@ -83,10 +83,10 @@ func select_from(session: Session, key: String) -> Result {
     //let statement = SimpleStatement(query, key)
     let map = ["key": key]
     let statement = SimpleStatement(query, map: map)
-    let rs = session.execute(statement).result
+    let future = session.execute(statement)
+    future.wait().check()
     print("...select_from")
-    _ = rs.check()
-    return rs
+    return future.result
 }
 
 func bind_by_name() {
@@ -115,7 +115,7 @@ func bind_by_name() {
          print("int64 i64",row.any(name: "i64") as! Int64)
      }*/
     print("*** rows ***")
-    for row in rs.rows() {
+    for row in rs.rows {
         //print("key=",row.any(0) as! String)
         //let basic = Basic(bln: row.any(1) as! Bool,
         //                  flt: row.any(2) as! Float,

@@ -1,15 +1,16 @@
 //
-//  async.swift
+//  paging.swift
 //  CassTest
 //
-//  Created by Philippe on 29/12/2017.
+//  Created by Philippe on 31/12/2017.
 //  Copyright © 2017 PLHB. All rights reserved.
 //
 
+import Foundation
 import Cass
 
-fileprivate let KEY = "test_async"
-fileprivate let NUM_CONCURRENT_REQUESTS = 1_000
+fileprivate let NUM_CONCURRENT_REQUESTS = 17
+fileprivate let PAGING_SIZE: Int32 = 7
 
 fileprivate let checker = {(_ err: Cass.Error) -> Bool in
     if !err.ok {
@@ -40,31 +41,25 @@ fileprivate
 func create_table(session: Session) -> () {
     print("create_table...")
     let query = """
-    CREATE TABLE IF NOT EXISTS examples.async (key text,
-                                  bln boolean,
-                                  flt float, dbl double,
-                                  i32 int, i64 bigint,
-                                  PRIMARY KEY (key));
+    CREATE TABLE IF NOT EXISTS examples.paging (key timeuuid,
+                                   value text,
+                                   PRIMARY KEY (key));
     """
     let future = session.execute(SimpleStatement(query)).wait()
     print("...create_table")
     future.check()
 }
 fileprivate
-func insert_into(session: Session, key: String) -> () {
+func insert_into(session: Session) -> () {
     print("insert_into...")
-    let query = "INSERT INTO examples.async (key, bln, flt, dbl, i32, i64) VALUES (?, ?, ?, ?, ?, ?);"
+    let gen = UuidGen()
+    let query = "INSERT INTO examples.paging (key, value) VALUES (?, ?);"
     var futures = Array<Future>()
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
-        let key_buffer = key+"\(i)"
-        let statement = SimpleStatement(query
-                                        ,key_buffer // key
-                                        ,0 == i % 2 // bln
-                                        ,Float(i) / 2 // flt
-                                        ,Double(i) / 200 // dbl
-                                        ,Int32(i) * 10 // i32
-                                        ,Int64(i) * 100 // i64
-        )
+        let key = gen.time_uuid()
+        let value = String(format:"%03d",i)
+//        print("insert_into: key: \(key) value: '\(value)'")
+        let statement = SimpleStatement(query, key, value)
         futures.append(session.execute(statement))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
@@ -73,14 +68,38 @@ func insert_into(session: Session, key: String) -> () {
     }
     print("...insert_into")
 }
+fileprivate
+func select_from(session: Session) -> () {
+    print("select_from...")
+    let query = "SELECT key, value FROM examples.paging;"
+    let statement = SimpleStatement(query).setPagingSize(PAGING_SIZE)
+    var cond = false
+    repeat {
+        print("---")
+        let future = session.execute(statement)
+        if !future.check() {
+            break
+        }
+        let rs = future.result
+        for row in rs.rows {
+            let key = row.any(0) as! UUID
+            let value = row.any(1) as! String
+            print("key: \(key) value:'\(value)'")
+        }
+        cond = statement.hasMorePages(result: rs)
+    } while cond
+    print("...select_from")
+}
 
-func async() {
-    print("async...")
+func paging() {
+    print("paging...")
 
     let session = getSession()
     create_keyspace(session: session)
     create_table(session: session)
-    insert_into(session: session, key: KEY)
+    insert_into(session: session)
+    select_from(session: session)
 
-    print("...async")
+    print("...paging")
 }
+
