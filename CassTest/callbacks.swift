@@ -36,7 +36,7 @@ fileprivate func on_select(_ parm: Listener_t) -> () {
         return
     }
     if let data = parm.dataPointer {
-        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
         let listener = Listener(callback: on_finish, data: session)
         let rs = parm.future.result
         print("rows")
@@ -63,7 +63,7 @@ fileprivate func on_insert(_ parm: Listener_t) -> () {
         let query = """
         SELECT key, value FROM examples.callbacks;
         """
-        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
         let listener = Listener(callback: on_select, data: session)
         session.execute(SimpleStatement(query), listener: listener)
     } else {
@@ -84,7 +84,7 @@ fileprivate func on_create_table(_ parm: Listener_t) -> () {
         INSERT INTO examples.callbacks (key, value)
         VALUES (?, ?);
         """
-        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
         let listener = Listener(callback: on_insert, data: session)
         let gen = UuidGen()
         let key = gen.time_uuid()
@@ -108,7 +108,7 @@ fileprivate func on_create_keyspace(_ parm: Listener_t) -> () {
         CREATE TABLE IF NOT EXISTS examples.callbacks
         (key timeuuid PRIMARY KEY, value timestamp);
         """
-        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
         let listener = Listener(callback: on_create_table, data: session)
         session.execute(SimpleStatement(query), listener: listener)
     } else {
@@ -128,7 +128,7 @@ fileprivate func on_session_connect(_ parm: Listener_t) -> () {
         CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                                'class': 'SimpleStrategy', 'replication_factor': '3' };
         """
-        unowned let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
         let listener = Listener(callback: on_create_keyspace, data: session)
         session.execute(SimpleStatement(query), listener: listener)
     } else {
