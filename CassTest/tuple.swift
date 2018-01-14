@@ -49,7 +49,7 @@ func insert_into(session: Session) {
     let id = gen.time
     let id_str = id.string
     let id_time_and_version = Int64(id.time_and_version)
-    print("insert_into: id_str=\(id_str) id_time_and_version=\(id_time_and_version)")
+    print("$$$ insert_into: id_str=\(id_str) id_time_and_version=\(id_time_and_version)")
     var item = Tuple(count: 2) //Tuple(id_str, id_time_and_version)
     item[0] = id_str
     item[1] = id_time_and_version
