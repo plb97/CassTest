@@ -24,6 +24,7 @@
 		373FD3C41FEA6B1100B14377 /* simple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3BA1FEA6B1100B14377 /* simple.swift */; };
 		373FD3C51FEA6B1100B14377 /* date_time.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3BB1FEA6B1100B14377 /* date_time.swift */; };
 		373FD3C71FEA6B5700B14377 /* batch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3C61FEA6B5700B14377 /* batch.swift */; };
+		37A0B8EA200A06A500CB3F1C /* tuple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A0B8E9200A06A500CB3F1C /* tuple.swift */; };
 		37C5A5851FE9166200E1E118 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C5A5841FE9166200E1E118 /* main.swift */; };
 		37C5A5951FE91C9F00E1E118 /* libCass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37C5A5911FE91BC500E1E118 /* libCass.a */; };
 /* End PBXBuildFile section */
@@ -72,6 +73,7 @@
 		373FD3CA1FEA797100B14377 /* LICENCE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = LICENCE.md; sourceTree = "<group>"; };
 		373FD3CB1FEA797100B14377 /* LICENSE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		373FD3CE1FEA88D200B14377 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		37A0B8E9200A06A500CB3F1C /* tuple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = tuple.swift; sourceTree = "<group>"; };
 		37C5A5811FE9166200E1E118 /* CassTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CassTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37C5A5841FE9166200E1E118 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		37C5A58B1FE91BC500E1E118 /* Cass.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cass.xcodeproj; path = ../Cass/Cass.xcodeproj; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				373FD3BA1FEA6B1100B14377 /* simple.swift */,
 				373FD3B81FEA6B1100B14377 /* uuids.swift */,
 				372CF79E1FF93CA800D0ABC9 /* paging.swift */,
+				37A0B8E9200A06A500CB3F1C /* tuple.swift */,
 			);
 			path = CassTest;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 				373FD3C71FEA6B5700B14377 /* batch.swift in Sources */,
 				3726281E1FF6721D0064A392 /* duration.swift in Sources */,
 				372CF79D1FF9265F00D0ABC9 /* prepared.swift in Sources */,
+				37A0B8EA200A06A500CB3F1C /* tuple.swift in Sources */,
 				37C5A5851FE9166200E1E118 /* main.swift in Sources */,
 				373FD3BF1FEA6B1100B14377 /* auth.swift in Sources */,
 				372628201FF6A07F0064A392 /* async.swift in Sources */,

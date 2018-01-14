@@ -30,6 +30,7 @@ fileprivate func on_finish(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_select(_ parm: CallbackData) -> () {
+    let query = "USE examples;"
     print("on_select...")
     if !(parm.future.check(checker: checker)) {
         print("*** \(parm.future.errorMessage)")
@@ -42,9 +43,7 @@ fileprivate func on_select(_ parm: CallbackData) -> () {
         let value = row.any(1) as! Date
         print("key=\(key) value=\(value)")
     }
-    if let data = parm.dataPointer {
-        let query = "USE examples;"
-        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+    if let session = parm.data(as: Session.self) {
         let callback = Callback(callback: on_finish, data: session)
         session.execute(SimpleStatement(query), callback: callback)
     } else {
@@ -54,16 +53,15 @@ fileprivate func on_select(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_insert(_ parm: CallbackData) -> () {
+    let query = """
+        SELECT key, value FROM examples.callbacks;
+        """
     print("on_insert...")
     if !(parm.future.check(checker: checker)) {
         print("*** \(parm.future.errorMessage)")
         return
     }
-    if let data = parm.dataPointer {
-        let query = """
-        SELECT key, value FROM examples.callbacks;
-        """
-        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+    if let session = parm.data(as: Session.self) {
         let callback = Callback(callback: on_select, data: session)
         session.execute(SimpleStatement(query), callback: callback)
     } else {
@@ -72,23 +70,21 @@ fileprivate func on_insert(_ parm: CallbackData) -> () {
     print("...on_insert")
 }
 
-
 fileprivate func on_create_table(_ parm: CallbackData) -> () {
+    let query = """
+        INSERT INTO examples.callbacks (key, value)
+        VALUES (?, ?);
+        """
     print("on_create_table...")
     if !(parm.future.check(checker: checker)) {
         print("*** \(parm.future.errorMessage)")
         return
     }
-    if let data = parm.dataPointer {
-        let query = """
-        INSERT INTO examples.callbacks (key, value)
-        VALUES (?, ?);
-        """
-        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+    if let session = parm.data(as: Session.self) {
         let callback = Callback(callback: on_insert, data: session)
         let gen = UuidGen()
-        let key = gen.time_uuid()
-        let value = gen.timestamp(key)
+        let key: UUID = gen.time
+        let value = Date(timestamp: Int64(key.timestamp))
         print("$$$ on_create_table: \(query) key=\(key) value=\(value)")
         session.execute(SimpleStatement(query,key,value), callback: callback)
     } else {
@@ -98,17 +94,16 @@ fileprivate func on_create_table(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
+    let query = """
+        CREATE TABLE IF NOT EXISTS examples.callbacks
+        (key timeuuid PRIMARY KEY, value timestamp);
+        """
     print("on_create_keyspace...")
     if !(parm.future.check(checker: checker)) {
         print("*** \(parm.future.errorMessage)")
         return
     }
-    if let data = parm.dataPointer {
-        let query = """
-        CREATE TABLE IF NOT EXISTS examples.callbacks
-        (key timeuuid PRIMARY KEY, value timestamp);
-        """
-        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+    if let session = parm.data(as: Session.self) {
         let callback = Callback(callback: on_create_table, data: session)
         session.execute(SimpleStatement(query), callback: callback)
     } else {
@@ -118,17 +113,16 @@ fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_session_connect(_ parm: CallbackData) -> () {
+    let query = """
+        CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
+                               'class': 'SimpleStrategy', 'replication_factor': '3' };
+        """
     print("on_session_connect...")
     if !(parm.future.check(checker: checker)) {
         print("*** \(parm.future.errorMessage)")
         return
     }
-    if let data = parm.dataPointer {
-        let query = """
-        CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
-                               'class': 'SimpleStrategy', 'replication_factor': '3' };
-        """
-        let session = data.bindMemory(to: Session.self, capacity: 1).pointee
+    if let session = parm.data(as: Session.self) {
         let callback = Callback(callback: on_create_keyspace, data: session)
         session.execute(SimpleStatement(query), callback: callback)
     } else {
@@ -144,5 +138,6 @@ func callbacks() {
     session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials(), callback: callback)
     print("waiting")
     semaphore.wait()
+    session.close()
     print("...callbacks")
 }

@@ -72,16 +72,16 @@ func uuids() {
     create_table(session: session)
     let gen = UuidGen()
     var uuid: UUID
-    uuid = gen.time_uuid()
+    uuid = gen.time
     //print("*** uuid=\(uuid) \(string(uuid: uuid))")
     insert_into(session: session, key: KEY, time: uuid, entry: "Log entry #01")
-    uuid = gen.time_uuid()
+    uuid = gen.time
     //print("*** uuid=\(uuid) \(string(uuid: uuid))")
     insert_into(session: session, key: KEY, time: uuid, entry: "Log entry #02")
-    uuid = gen.time_uuid()
+    uuid = gen.time
     //print("*** uuid=\(uuid) \(string(uuid: uuid))")
     insert_into(session: session, key: KEY, time: uuid, entry: "Log entry #03")
-    uuid = gen.time_uuid()
+    uuid = gen.time
     //print("*** uuid=\(uuid) \(string(uuid: uuid))")
     insert_into(session: session, key: KEY, time: uuid, entry: "Log entry #04")
 

@@ -10,7 +10,7 @@ import Foundation
 import Cass
 
 fileprivate
-let KEY = "test"
+let KEY = "test_decimal"
 
 fileprivate
 func getSession() -> Session {
@@ -54,10 +54,12 @@ func insert_into(session: Session, key: String, decimal: Decimal) -> () {
 fileprivate
 func select_from(session: Session, key: String) -> Result {
     print("select_from...")
-    let query = "SELECT key, d FROM examples.decimal WHERE key = ?;"
+    let query = "SELECT key, d FROM examples.decimal;"
+    //let query = "SELECT key, d FROM examples.decimal WHERE key = ?;"
     //let statement = SimpleStatement(query, key)
-    let map = ["key": key]
-    let statement = SimpleStatement(query, map: map)
+    //let map = ["key": key]
+    //let statement = SimpleStatement(query, map: map)
+    let statement = SimpleStatement(query)
     let future = session.execute(statement)
     future.wait().check()
     print("...select_from")
@@ -69,10 +71,9 @@ func decimal() {
     let session = getSession()
     create_keyspace(session: session)
     create_table(session: session)
-    let dec = Decimal(1234.56)
-    let exp = dec.exponent
-    let sgd = NSDecimalNumber(decimal: dec.significand).int64Value
-    print("*** dec=\(dec) \(type(of:dec)) exp=\(exp) \(type(of:exp)) sig=\(sgd) \(type(of:sgd))")
+    let dec = Decimal(56.78)
+    let (varint, varint_size, int32) = dec.decimal
+    print("*** dec=\(dec) \(type(of:dec)) varint=\(varint) varint_size=\(varint_size) int32=\(int32)")
     insert_into(session: session, key: KEY, decimal: dec)
     let rs = select_from(session: session, key: KEY)
     /*print("first")
@@ -87,9 +88,8 @@ func decimal() {
     for row in rs.rows {
         print("row=\(row)")
         let key = row.any(0) as! String
-        if let d = row.any(1) as? Decimal {
-            print("key=\(key) d=\(d)")
-        }
+        let d = row.any(1) as! Decimal
+        print("key=\(key) d=\(d)")
     }
     print("...decimal")
 }

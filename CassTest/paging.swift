@@ -56,7 +56,7 @@ func insert_into(session: Session) -> () {
     let query = "INSERT INTO examples.paging (key, value) VALUES (?, ?);"
     var futures = Array<Future>()
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
-        let key = gen.time_uuid()
+        let key = gen.time
         let value = String(format:"%03d",i)
 //        print("insert_into: key: \(key) value: '\(value)'")
         let statement = SimpleStatement(query, key, value)
