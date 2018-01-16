@@ -129,12 +129,12 @@
 				3726281D1FF6721D0064A392 /* duration.swift */,
 				373FD3B41FEA6B1100B14377 /* maps.swift */,
 				372CF7991FF9237700D0ABC9 /* named_parameters.swift */,
+				372CF79E1FF93CA800D0ABC9 /* paging.swift */,
 				372CF79C1FF9265F00D0ABC9 /* prepared.swift */,
 				372628131FF3A0620064A392 /* schema_meta.swift */,
 				373FD3BA1FEA6B1100B14377 /* simple.swift */,
-				373FD3B81FEA6B1100B14377 /* uuids.swift */,
-				372CF79E1FF93CA800D0ABC9 /* paging.swift */,
 				37A0B8E9200A06A500CB3F1C /* tuple.swift */,
+				373FD3B81FEA6B1100B14377 /* uuids.swift */,
 			);
 			path = CassTest;
 			sourceTree = "<group>";

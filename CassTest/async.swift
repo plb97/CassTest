@@ -12,7 +12,7 @@ fileprivate let KEY = "test_async"
 fileprivate let NUM_CONCURRENT_REQUESTS = 1_000
 
 fileprivate let checker = {(_ err: Cass.Error) -> Bool in
-    if !err.ok {
+    if .ok != err {
         print("*** CHECKER: Error=\(err)")
         return false
     }

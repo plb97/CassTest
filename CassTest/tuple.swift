@@ -50,9 +50,10 @@ func insert_into(session: Session) {
     let id_str = id.string
     let id_time_and_version = Int64(id.time_and_version)
     print("$$$ insert_into: id_str=\(id_str) id_time_and_version=\(id_time_and_version)")
-    var item = Tuple(count: 2) //Tuple(id_str, id_time_and_version)
+    let item = Tuple(count: 2)
     item[0] = id_str
     item[1] = id_time_and_version
+    //let item = Tuple(id_str, id_time_and_version)
     let statement = SimpleStatement(query,id,item)
     let future = session.execute(statement).wait()
     print("...insert_into")

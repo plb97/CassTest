@@ -11,7 +11,7 @@ import Cass
 
 fileprivate var semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
 fileprivate let checker = {(_ err: Cass.Error) -> Bool in
-    if !err.ok {
+    if .ok != err {
         print("*** CHECKER: Error=\(err)")
         semaphore.signal()
         return false

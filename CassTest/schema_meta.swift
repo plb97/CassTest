@@ -138,13 +138,13 @@ func print_keyspace_meta(meta: KeyspaceMeta, indent: Int = 0) {
     }
 }
 func print_keyspace(session: Session, keyspace: String) {
-    if let ksp = session.schemaMeta.keyspaceMeta(keyspace: keyspace) {
+    if let ksp = session.schemaMeta.keyspaceMeta[keyspace] {
         print_keyspace_meta(meta: ksp,  indent: 0)
     }
 }
 func print_table(session: Session, keyspace: String, table: String) -> () {
-    if let ksp = session.schemaMeta.keyspaceMeta(keyspace: keyspace) {
-        if let tbl = ksp.tableMeta(table: table) {
+    if let ksp = session.schemaMeta.keyspaceMeta[keyspace] {
+        if let tbl = ksp.tableMeta[table] {
             print_table_meta(meta: tbl, indent: 0)
         } else {
             print("+++ table \"\(table)\" not found")
@@ -155,8 +155,8 @@ func print_table(session: Session, keyspace: String, table: String) -> () {
 }
 func print_function(session: Session, keyspace: String, function: String, arguments: String) -> () {
     print("+++ ")
-    if let ksp = session.schemaMeta.keyspaceMeta(keyspace: keyspace) {
-        if let fnc = ksp.functionMeta(name: function, arguments: arguments) {
+    if let ksp = session.schemaMeta.keyspaceMeta[keyspace] {
+        if let fnc = ksp.functionMeta[function, arguments] {
             print_function_meta(meta: fnc, indent: 0)
         } else {
             print("+++ function \"\(function)\" with arguments \"\(arguments)\" not found")
@@ -167,8 +167,8 @@ func print_function(session: Session, keyspace: String, function: String, argume
 }
 func print_aggregate(session: Session, keyspace: String, aggregate: String, arguments: String) -> () {
     print("+++ ")
-    if let ksp = session.schemaMeta.keyspaceMeta(keyspace: keyspace) {
-        if let agg = ksp.aggregateMeta(name: aggregate, arguments: arguments) {
+    if let ksp = session.schemaMeta.keyspaceMeta[keyspace] {
+        if let agg = ksp.aggregateMeta[aggregate, arguments] {
             print_aggregate_meta(meta: agg, indent: 0)
         } else {
             print("+++ aggregate \"\(aggregate)\" with arguments \"\(arguments)\" not found")

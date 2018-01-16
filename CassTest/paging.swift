@@ -13,7 +13,7 @@ fileprivate let NUM_CONCURRENT_REQUESTS = 17
 fileprivate let PAGING_SIZE: Int32 = 7
 
 fileprivate let checker = {(_ err: Cass.Error) -> Bool in
-    if !err.ok {
+    if .ok != err {
         print("*** CHECKER: Error=\(err)")
         return false
     }
