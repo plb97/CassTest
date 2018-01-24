@@ -72,7 +72,7 @@ func decimal() {
     create_keyspace(session: session)
     create_table(session: session)
     let dec = Decimal(56.78)
-    let (varint, varint_size, int32) = dec.decimal
+    let (varint, varint_size, int32) = dec.cass
     print("*** dec=\(dec) \(type(of:dec)) varint=\(varint) varint_size=\(varint_size) int32=\(int32)")
     insert_into(session: session, key: KEY, decimal: dec)
     let rs = select_from(session: session, key: KEY)

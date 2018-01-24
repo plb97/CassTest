@@ -8,8 +8,7 @@
 
 import Cass
 
-fileprivate
-let KEY = "prepared_test"
+fileprivate let KEY = "bind_by_name"
 
 fileprivate
 struct Basic {
@@ -81,8 +80,7 @@ func select_from(session: Session, key: String) -> Result {
     print("select_from...")
     let query = "SELECT key, bln, flt, dbl, i32, i64 FROM examples.basic WHERE key = ?"
     //let statement = SimpleStatement(query, key)
-    let map = ["key": key]
-    let statement = SimpleStatement(query, map: map)
+    let statement = SimpleStatement(query, map: ["key": key])
     let future = session.execute(statement)
     future.wait().check()
     print("...select_from")

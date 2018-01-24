@@ -41,7 +41,7 @@ func create_table(session: Session) -> () {
 fileprivate
 func insert_into(session: Session,_ pairs: [[String]]) -> () {
     print("insert_into...")
-    let batch = BatchLogged()
+    let batch = Batch(.logged)
     let query = "INSERT INTO examples.pairs (key, value) VALUES (?, ?);"
 
     let prepare = session.prepare(query).wait()
