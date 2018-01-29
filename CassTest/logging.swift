@@ -19,14 +19,14 @@ fileprivate
 func on_log(_ parm: LogCallbackData) {
     if let log_file = parm.data(as: FileHandle.self) {
         print("on_log: \(parm.logMessage.severity) \(parm.logMessage.message)")
-        log_file.write(Data(parm.logMessage.description.utf8))
+        log_file.write(Data((parm.logMessage.description+"\n").utf8))
     } else {
         fatalError()
     }
 }
 func logging() {
     print("logging...")
-    LogCallback.setLevel(.debug)
+    LogMessage.setLevel(.debug)
     let file = "driver.log"
     let fileManager = FileManager()
     print("jounal: \(fileManager.currentDirectoryPath)/\(file)")
@@ -37,15 +37,14 @@ func logging() {
         }
     }
     if let log_file = FileHandle(forWritingAtPath: file) {
-        let logCallback = LogCallback(callback: on_log, data: log_file)
-        let ptr = LogCallback.setCallback(logCallback)
-        //LogCallback.setCallback(LogCallback(callback: on_log, data: log_file))
+        let logCallback = LogCallback(function: on_log, data: log_file)
+        let log_callback_ptr = LogMessage.setCallback(logCallback)
         let session = getSession()
         defer {
             session.close().wait()
             log_file.synchronizeFile()
             log_file.closeFile()
-            logCallback.free(ptr, as: FileHandle.self)
+            logCallback.dealloc(log_callback_ptr, FileHandle.self)
         }
     } else {
         print("Impossible d'ouvrir le fichier \(file)")

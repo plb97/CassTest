@@ -21,7 +21,7 @@ fileprivate let checker = {(_ err: Cass.Error) -> Bool in
 
 fileprivate func on_finish(_ parm: CallbackData) -> () {
     defer {
-        parm.free(as: Session.self)
+        parm.dealloc(Session.self)
     }
     print("on_finish...")
     if !(parm.future.check(checker: checker)) {
@@ -34,7 +34,7 @@ fileprivate func on_finish(_ parm: CallbackData) -> () {
 
 fileprivate func on_select(_ parm: CallbackData) -> () {
     defer {
-        parm.free(as: Session.self)
+        parm.dealloc(Session.self)
     }
     let query = "USE examples;"
     print("on_select...")
@@ -60,7 +60,7 @@ fileprivate func on_select(_ parm: CallbackData) -> () {
 
 fileprivate func on_insert(_ parm: CallbackData) -> () {
     defer {
-        parm.free(as: Session.self)
+        parm.dealloc(Session.self)
     }
     let query = """
         SELECT key, value FROM examples.callbacks;
@@ -81,7 +81,7 @@ fileprivate func on_insert(_ parm: CallbackData) -> () {
 
 fileprivate func on_create_table(_ parm: CallbackData) -> () {
     defer {
-        parm.free(as: Session.self)
+        parm.dealloc(Session.self)
     }
     let query = """
         INSERT INTO examples.callbacks (key, value)
@@ -107,7 +107,7 @@ fileprivate func on_create_table(_ parm: CallbackData) -> () {
 
 fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
     defer {
-        parm.free(as: Session.self)
+        parm.dealloc(Session.self)
     }
     let query = """
         CREATE TABLE IF NOT EXISTS examples.callbacks
@@ -129,7 +129,7 @@ fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
 
 fileprivate func on_session_connect(_ parm: CallbackData) -> () {
     defer {
-        parm.free(as: Session.self)
+        parm.dealloc(Session.self)
     }
     let query = """
         CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
