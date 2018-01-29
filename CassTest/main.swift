@@ -24,9 +24,10 @@ print("*** start")
 //batch()
 //paging()
 //async()
-//callbacks()
+callbacks()
 //auth()
 //udt()
+logging()
 
 print("*** end")
 

@@ -6,8 +6,8 @@
 //  Copyright © 2017 PLB. All rights reserved.
 //
 
-import Dispatch
 import Cass
+import Dispatch
 
 fileprivate var semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
 fileprivate let checker = {(_ err: Cass.Error) -> Bool in
@@ -20,6 +20,9 @@ fileprivate let checker = {(_ err: Cass.Error) -> Bool in
 }
 
 fileprivate func on_finish(_ parm: CallbackData) -> () {
+    defer {
+        parm.free(as: Session.self)
+    }
     print("on_finish...")
     if !(parm.future.check(checker: checker)) {
         print("*** \(parm.future.errorMessage)")
@@ -30,6 +33,9 @@ fileprivate func on_finish(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_select(_ parm: CallbackData) -> () {
+    defer {
+        parm.free(as: Session.self)
+    }
     let query = "USE examples;"
     print("on_select...")
     if !(parm.future.check(checker: checker)) {
@@ -53,6 +59,9 @@ fileprivate func on_select(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_insert(_ parm: CallbackData) -> () {
+    defer {
+        parm.free(as: Session.self)
+    }
     let query = """
         SELECT key, value FROM examples.callbacks;
         """
@@ -71,6 +80,9 @@ fileprivate func on_insert(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_create_table(_ parm: CallbackData) -> () {
+    defer {
+        parm.free(as: Session.self)
+    }
     let query = """
         INSERT INTO examples.callbacks (key, value)
         VALUES (?, ?);
@@ -94,6 +106,9 @@ fileprivate func on_create_table(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
+    defer {
+        parm.free(as: Session.self)
+    }
     let query = """
         CREATE TABLE IF NOT EXISTS examples.callbacks
         (key timeuuid PRIMARY KEY, value timestamp);
@@ -113,6 +128,9 @@ fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
 }
 
 fileprivate func on_session_connect(_ parm: CallbackData) -> () {
+    defer {
+        parm.free(as: Session.self)
+    }
     let query = """
         CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
                                'class': 'SimpleStrategy', 'replication_factor': '3' };
@@ -138,6 +156,7 @@ func callbacks() {
     session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials(), callback: callback)
     print("waiting")
     semaphore.wait()
-    session.close()
+    session.close().wait()
+    //print("count=\(CFGetRetainCount(session))")
     print("...callbacks")
 }

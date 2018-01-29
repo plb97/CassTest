@@ -13,7 +13,7 @@
 		372CF79A1FF9237700D0ABC9 /* named_parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372CF7991FF9237700D0ABC9 /* named_parameters.swift */; };
 		372CF79D1FF9265F00D0ABC9 /* prepared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372CF79C1FF9265F00D0ABC9 /* prepared.swift */; };
 		372CF79F1FF93CA800D0ABC9 /* paging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372CF79E1FF93CA800D0ABC9 /* paging.swift */; };
-		373FD3BC1FEA6B1100B14377 /* cass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B11FEA6B1100B14377 /* cass.swift */; };
+		373FD3BC1FEA6B1100B14377 /* decimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B11FEA6B1100B14377 /* decimal.swift */; };
 		373FD3BD1FEA6B1100B14377 /* collections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B21FEA6B1100B14377 /* collections.swift */; };
 		373FD3BE1FEA6B1100B14377 /* maps.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B41FEA6B1100B14377 /* maps.swift */; };
 		373FD3BF1FEA6B1100B14377 /* auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373FD3B51FEA6B1100B14377 /* auth.swift */; };
@@ -28,6 +28,7 @@
 		37A0B912200F9FED00CB3F1C /* udt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A0B911200F9FED00CB3F1C /* udt.swift */; };
 		37C5A5851FE9166200E1E118 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37C5A5841FE9166200E1E118 /* main.swift */; };
 		37C5A5951FE91C9F00E1E118 /* libCass.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 37C5A5911FE91BC500E1E118 /* libCass.a */; };
+		37EE0B51201B6A39004808DC /* logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37EE0B50201B6A39004808DC /* logging.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +60,7 @@
 		372CF7991FF9237700D0ABC9 /* named_parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = named_parameters.swift; sourceTree = "<group>"; };
 		372CF79C1FF9265F00D0ABC9 /* prepared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = prepared.swift; sourceTree = "<group>"; };
 		372CF79E1FF93CA800D0ABC9 /* paging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = paging.swift; sourceTree = "<group>"; };
-		373FD3B11FEA6B1100B14377 /* cass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = cass.swift; sourceTree = "<group>"; };
+		373FD3B11FEA6B1100B14377 /* decimal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = decimal.swift; sourceTree = "<group>"; };
 		373FD3B21FEA6B1100B14377 /* collections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = collections.swift; sourceTree = "<group>"; };
 		373FD3B41FEA6B1100B14377 /* maps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = maps.swift; sourceTree = "<group>"; };
 		373FD3B51FEA6B1100B14377 /* auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = auth.swift; sourceTree = "<group>"; };
@@ -79,6 +80,7 @@
 		37C5A5811FE9166200E1E118 /* CassTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CassTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37C5A5841FE9166200E1E118 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		37C5A58B1FE91BC500E1E118 /* Cass.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cass.xcodeproj; path = ../Cass/Cass.xcodeproj; sourceTree = "<group>"; };
+		37EE0B50201B6A39004808DC /* logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = logging.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,7 +127,7 @@
 				373FD3C61FEA6B5700B14377 /* batch.swift */,
 				373FD3B71FEA6B1100B14377 /* bind_by_name.swift */,
 				373FD3B91FEA6B1100B14377 /* callbacks.swift */,
-				373FD3B11FEA6B1100B14377 /* cass.swift */,
+				373FD3B11FEA6B1100B14377 /* decimal.swift */,
 				373FD3B21FEA6B1100B14377 /* collections.swift */,
 				373FD3BB1FEA6B1100B14377 /* date_time.swift */,
 				3726281D1FF6721D0064A392 /* duration.swift */,
@@ -138,6 +140,7 @@
 				37A0B8E9200A06A500CB3F1C /* tuple.swift */,
 				37A0B911200F9FED00CB3F1C /* udt.swift */,
 				373FD3B81FEA6B1100B14377 /* uuids.swift */,
+				37EE0B50201B6A39004808DC /* logging.swift */,
 			);
 			path = CassTest;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 			files = (
 				373FD3C21FEA6B1100B14377 /* uuids.swift in Sources */,
 				373FD3C41FEA6B1100B14377 /* simple.swift in Sources */,
+				37EE0B51201B6A39004808DC /* logging.swift in Sources */,
 				373FD3C01FEA6B1100B14377 /* basic.swift in Sources */,
 				373FD3C31FEA6B1100B14377 /* callbacks.swift in Sources */,
 				373FD3C71FEA6B5700B14377 /* batch.swift in Sources */,
@@ -249,7 +253,7 @@
 				373FD3C11FEA6B1100B14377 /* bind_by_name.swift in Sources */,
 				373FD3BE1FEA6B1100B14377 /* maps.swift in Sources */,
 				37A0B912200F9FED00CB3F1C /* udt.swift in Sources */,
-				373FD3BC1FEA6B1100B14377 /* cass.swift in Sources */,
+				373FD3BC1FEA6B1100B14377 /* decimal.swift in Sources */,
 				373FD3C51FEA6B1100B14377 /* date_time.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
