@@ -27,6 +27,7 @@ struct Credentials: Response {
         return resp
     }
     var data: UnsafeMutableRawPointer? { return data_ }
+    var error: String? = nil
 }
 
 fileprivate

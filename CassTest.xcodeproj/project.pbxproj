@@ -127,10 +127,11 @@
 				373FD3C61FEA6B5700B14377 /* batch.swift */,
 				373FD3B71FEA6B1100B14377 /* bind_by_name.swift */,
 				373FD3B91FEA6B1100B14377 /* callbacks.swift */,
-				373FD3B11FEA6B1100B14377 /* decimal.swift */,
 				373FD3B21FEA6B1100B14377 /* collections.swift */,
 				373FD3BB1FEA6B1100B14377 /* date_time.swift */,
+				373FD3B11FEA6B1100B14377 /* decimal.swift */,
 				3726281D1FF6721D0064A392 /* duration.swift */,
+				37EE0B50201B6A39004808DC /* logging.swift */,
 				373FD3B41FEA6B1100B14377 /* maps.swift */,
 				372CF7991FF9237700D0ABC9 /* named_parameters.swift */,
 				372CF79E1FF93CA800D0ABC9 /* paging.swift */,
@@ -140,7 +141,6 @@
 				37A0B8E9200A06A500CB3F1C /* tuple.swift */,
 				37A0B911200F9FED00CB3F1C /* udt.swift */,
 				373FD3B81FEA6B1100B14377 /* uuids.swift */,
-				37EE0B50201B6A39004808DC /* logging.swift */,
 			);
 			path = CassTest;
 			sourceTree = "<group>";
