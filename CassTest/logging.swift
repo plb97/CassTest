@@ -38,13 +38,13 @@ func logging() {
     }
     if let log_file = FileHandle(forWritingAtPath: file) {
         let logCallback = LogCallback(function: on_log, data: log_file)
-        let log_callback_ptr = LogMessage.setCallback(logCallback)
+        let logCallbackPtr = LogMessage.setCallback(logCallback)
         let session = getSession()
         defer {
             session.close().wait()
             log_file.synchronizeFile()
             log_file.closeFile()
-            logCallback.close(log_callback_ptr, as: FileHandle.self)
+            logCallback.close(logCallbackPtr, as: FileHandle.self)
         }
     } else {
         print("Impossible d'ouvrir le fichier \(file)")
