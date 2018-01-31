@@ -8,7 +8,7 @@
 
 import Cass
 
-fileprivate let KEY = "test_async"
+fileprivate let KEY = "async_test"
 fileprivate let NUM_CONCURRENT_REQUESTS = 1_000
 
 fileprivate let checker = {(_ err: Cass.Error) -> Bool in
@@ -56,7 +56,8 @@ func insert_into(session: Session, key: String) -> () {
     let query = "INSERT INTO examples.async (key, bln, flt, dbl, i32, i64) VALUES (?, ?, ?, ?, ?, ?);"
     var futures = Array<Future>()
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
-        let key_buffer = key+"\(i)"
+        let key_buffer = String(format:"%@_%03d",key,i) //"\(key)_\(i)"
+        //print("key_buffer=\(key_buffer)")
         let statement = SimpleStatement(query
                                         ,key_buffer // key
                                         ,0 == i % 2 // bln
@@ -69,7 +70,9 @@ func insert_into(session: Session, key: String) -> () {
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
-        future.wait().check(checker: checker)
+        if !future.wait().check(checker: checker) {
+            print("*** \(future.errorMessage)")
+        }
     }
     print("...insert_into")
 }
