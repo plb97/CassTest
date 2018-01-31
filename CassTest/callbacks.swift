@@ -152,11 +152,13 @@ fileprivate func on_session_connect(_ parm: CallbackData) -> () {
 func callbacks() {
     print("callbacks...")
     let session = Session()
+    defer {
+        session.close().wait()
+    }
     let callback = Callback(callback: on_session_connect, data: session)
     session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials(), callback: callback)
     print("waiting")
     semaphore.wait()
-    session.close().wait()
     //print("count=\(CFGetRetainCount(session))")
     print("...callbacks")
 }

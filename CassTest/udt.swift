@@ -118,6 +118,9 @@ func select_from(session: Session) {
 func udt() {
     print("udt...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
 
     create_keyspace(session: session)
     create_types(session: session)

@@ -94,6 +94,9 @@ func select_from(session: Session, key: String) -> Result {
 func basic() {
     print("basic...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
 
     create_keyspace(session: session)
     create_table(session: session)

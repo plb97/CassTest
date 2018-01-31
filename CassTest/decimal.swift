@@ -69,6 +69,9 @@ func select_from(session: Session, key: String) -> Result {
 func decimal() {
     print("decimal...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_keyspace(session: session)
     create_table(session: session)
     let dec = Decimal(56.78)

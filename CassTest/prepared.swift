@@ -142,6 +142,9 @@ fileprivate func print_result(_ rs: Result) {
 func prepared() {
     print("prepared...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
 
     create_keyspace(session: session)
     create_table(session: session)

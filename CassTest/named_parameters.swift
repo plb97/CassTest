@@ -85,6 +85,9 @@ func select_from(session: Session, key: String) -> Result {
 func named_parameters() {
     print("named_parameters...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
 
     create_keyspace(session: session)
     create_table(session: session)

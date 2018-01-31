@@ -67,6 +67,9 @@ func batch() {
     let pairs = [["a", "1"], ["b", "2"]]
 
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_keyspace(session: session)
     create_table(session: session)
     insert_into(session: session, pairs)

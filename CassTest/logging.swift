@@ -45,6 +45,7 @@ func logging() {
             log_file.synchronizeFile()
             log_file.closeFile()
             logCallback.dealloc(log_callback_ptr, as: FileHandle.self)
+            LogMessage.unsetCallback()
         }
     } else {
         print("Impossible d'ouvrir le fichier \(file)")

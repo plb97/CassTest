@@ -95,6 +95,9 @@ func paging() {
     print("paging...")
 
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_keyspace(session: session)
     create_table(session: session)
     insert_into(session: session)

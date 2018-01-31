@@ -67,6 +67,9 @@ func select_from(session: Session, key: String) -> Result {
 func date_time() {
     print("date_time...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_keyspace(session: session)
     create_table(session: session)
     let now = Date()

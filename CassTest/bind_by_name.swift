@@ -90,6 +90,9 @@ func select_from(session: Session, key: String) -> Result {
 func bind_by_name() {
     print("bind_by_name...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_keyspace(session: session)
     create_table(session: session)
     let basic = Basic(bln: true, flt: 0.001, dbl: 0.0002, i32: 3, i64: 4)

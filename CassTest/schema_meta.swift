@@ -180,6 +180,9 @@ func print_aggregate(session: Session, keyspace: String, aggregate: String, argu
 func schema_meta() {
     print("schema_meta...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
 
     create_keyspace(session: session)
     create_table(session: session)

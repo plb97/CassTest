@@ -65,6 +65,9 @@ func select_from(session: Session, key: String) -> Result {
 func duration() {
     print("duration...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_keyspace(session: session)
     create_table(session: session)
 

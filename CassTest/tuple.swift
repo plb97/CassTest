@@ -81,6 +81,9 @@ func select_from(session: Session) {
 func tuple() {
     print("tuple...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
 
     create_keyspace(session: session)
     create_table(session: session)

@@ -66,6 +66,9 @@ func select_from(_ session: Session,_ key: String) -> Result {
 func maps() {
     print("maps...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_keyspace(session: session)
     create_table(session: session)
 

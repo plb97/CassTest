@@ -6,7 +6,6 @@
 //  Copyright © 2017 PLB. All rights reserved.
 //
 
-import Foundation
 import Cass
 
 fileprivate
@@ -69,6 +68,9 @@ func select_from(session: Session, key: String) -> Result {
 func uuids() {
     print("uuids...")
     let session = getSession()
+    defer {
+        session.close().wait()
+    }
     create_table(session: session)
     let gen = UuidGen()
     var uuid: UUID
