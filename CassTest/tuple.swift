@@ -8,8 +8,7 @@
 
 import Cass
 
-fileprivate
-let KEY = "basic_tuple"
+fileprivate let KEY = "basic_tuple"
 
 fileprivate
 func getSession() -> Session {

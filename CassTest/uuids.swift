@@ -8,8 +8,7 @@
 
 import Cass
 
-fileprivate
-let KEY = "test"
+fileprivate let KEY = "test"
 
 fileprivate
 func getSession() -> Session {

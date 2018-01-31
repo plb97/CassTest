@@ -12,13 +12,11 @@ fileprivate
 struct Credentials: Response {
     let username: String
     let password: String
-    let data_: UnsafeMutableRawPointer?
-    init(username: String = "cassandra", password: String = "cassandra", data: UnsafeMutableRawPointer? = nil) {
+    init(username: String = "cassandra", password: String = "cassandra") {
         self.username = username
         self.password = password
-        data_ = data
     }
-    var response: Array<UInt8> {
+    var response: Array<UInt8>? {
         var resp = Array<UInt8>()
         resp.append(0)
         resp.append(contentsOf: username.utf8)
@@ -26,8 +24,6 @@ struct Credentials: Response {
         resp.append(contentsOf: password.utf8)
         return resp
     }
-    var data: UnsafeMutableRawPointer? { return data_ }
-    var error: String? = nil
 }
 
 fileprivate
@@ -36,7 +32,7 @@ func initialCallback(authenticator: Authenticator, response: Response) -> () {
     print("*** inet=\(authenticator.address)")
     print("*** className=\(authenticator.className)")
     print("*** host=\(authenticator.hostname)")
-    authenticator.setResponse(response: response.response)
+    authenticator.setResponse(response: response)
     print("...initialCallback")
 }
 fileprivate

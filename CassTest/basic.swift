@@ -8,17 +8,15 @@
 
 import Cass
 
-fileprivate
-struct Basic {
+fileprivate let KEY = "basic_test"
+
+fileprivate struct Basic {
     var bln: Bool
     var flt: Float
     var dbl: Double
     var i32: Int32
     var i64: Int64
 }
-
-fileprivate
-let KEY = "basic_test"
 
 fileprivate
 func getSession() -> Session {

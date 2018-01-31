@@ -6,7 +6,6 @@
 //  Copyright © 2017 PLHB. All rights reserved.
 //
 
-import Foundation
 import Cass
 
 fileprivate let NUM_CONCURRENT_REQUESTS = 17

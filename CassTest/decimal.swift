@@ -6,11 +6,9 @@
 //  Copyright © 2017 PLB. All rights reserved.
 //
 
-import Foundation
 import Cass
 
-fileprivate
-let KEY = "test_decimal"
+fileprivate let KEY = "test_decimal"
 
 fileprivate
 func getSession() -> Session {

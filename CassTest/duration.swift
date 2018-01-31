@@ -6,7 +6,6 @@
 //  Copyright © 2017 PLHB. All rights reserved.
 //
 
-//import Foundation
 import Cass
 
 fileprivate let NANOS_IN_A_SEC: Int64 = 1_000_000_000

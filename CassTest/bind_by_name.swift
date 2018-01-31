@@ -8,7 +8,7 @@
 
 import Cass
 
-fileprivate let KEY = "bind_by_name"
+fileprivate let KEY = "bind_by_name_test"
 
 fileprivate
 struct Basic {
