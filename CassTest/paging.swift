@@ -26,7 +26,7 @@ func getSession() -> Session {
     return session
 }
 fileprivate
-func create_keyspace(session: Session) -> () {
+func create_keyspace(session: Session) {
     print("create_keyspace...")
     let query = """
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
@@ -37,7 +37,7 @@ func create_keyspace(session: Session) -> () {
     future.check()
 }
 fileprivate
-func create_table(session: Session) -> () {
+func create_table(session: Session) {
     print("create_table...")
     let query = """
     CREATE TABLE IF NOT EXISTS examples.paging (key timeuuid,
@@ -49,7 +49,7 @@ func create_table(session: Session) -> () {
     future.check()
 }
 fileprivate
-func insert_into(session: Session) -> () {
+func insert_into(session: Session) {
     print("insert_into...")
     let gen = UuidGen()
     let query = "INSERT INTO examples.paging (key, value) VALUES (?, ?);"
@@ -68,7 +68,7 @@ func insert_into(session: Session) -> () {
     print("...insert_into")
 }
 fileprivate
-func select_from(session: Session) -> () {
+func select_from(session: Session) {
     print("select_from...")
     let query = "SELECT key, value FROM examples.paging;"
     let statement = SimpleStatement(query).setPagingSize(PAGING_SIZE)

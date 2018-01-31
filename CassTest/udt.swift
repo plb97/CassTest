@@ -19,7 +19,7 @@ func getSession() -> Session {
 }
 
 fileprivate
-func create_keyspace(session: Session) -> () {
+func create_keyspace(session: Session) {
     print("create_keyspace...")
     let query = """
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
@@ -30,14 +30,14 @@ func create_keyspace(session: Session) -> () {
     future.check()
 }
 fileprivate
-func create_types(session: Session) -> () {
+func create_types(session: Session) {
     print("create_types...")
     session.execute(SimpleStatement("CREATE TYPE IF NOT EXISTS examples.phone_numbers (phone1 int, phone2 int);")).wait().check()
     session.execute(SimpleStatement("CREATE TYPE IF NOT EXISTS examples.address (street text, city text, zip int, phone set<frozen<phone_numbers>>);")).wait().check()
     print("...create_types")
 }
 fileprivate
-func create_table(session: Session) -> () {
+func create_table(session: Session) {
     print("create_table...")
     let query = """
     CREATE TABLE IF NOT EXISTS examples.udt (id timeuuid, address frozen<address>, PRIMARY KEY(id));

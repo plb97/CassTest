@@ -18,7 +18,7 @@ func getSession() -> Session {
 }
 
 fileprivate
-func create_keyspace(session: Session) -> () {
+func create_keyspace(session: Session) {
     print("create_keyspace...")
     let query = """
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
@@ -29,7 +29,7 @@ func create_keyspace(session: Session) -> () {
     future.check()
 }
 fileprivate
-func create_table(session: Session) -> () {
+func create_table(session: Session) {
     print("create_table...")
     let query = """
     CREATE TABLE IF NOT EXISTS examples.decimal (key text PRIMARY KEY,  d decimal);
@@ -39,7 +39,7 @@ func create_table(session: Session) -> () {
     future.check()
 }
 fileprivate
-func insert_into(session: Session, key: String, decimal: Decimal) -> () {
+func insert_into(session: Session, key: String, decimal: Decimal) {
     print("insert_into...")
     let query = "INSERT INTO examples.decimal (key, d) VALUES (?, ?);"
     let statement = SimpleStatement(query,

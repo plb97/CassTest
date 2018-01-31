@@ -18,7 +18,7 @@ func getSession() -> Session {
 }
 
 fileprivate
-func create_keyspace(session: Session) -> () {
+func create_keyspace(session: Session) {
     print("create_keyspace...")
     let query = """
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
@@ -29,7 +29,7 @@ func create_keyspace(session: Session) -> () {
     future.check()
 }
 fileprivate
-func create_table(session: Session) -> () {
+func create_table(session: Session) {
     print("create_table...")
     let query = """
     CREATE TABLE IF NOT EXISTS examples.schema_meta (key text,
@@ -41,7 +41,7 @@ func create_table(session: Session) -> () {
     future.check()
 }
 fileprivate
-func create_functions(session: Session) -> () {
+func create_functions(session: Session) {
     print("create_functions...")
     var query = """
     CREATE OR REPLACE FUNCTION examples.avg_state(state tuple<int, bigint>, val int)
@@ -139,7 +139,7 @@ func print_keyspace(session: Session, keyspace: String) {
         print_keyspace_meta(meta: ksp,  indent: 0)
     }
 }
-func print_table(session: Session, keyspace: String, table: String) -> () {
+func print_table(session: Session, keyspace: String, table: String) {
     if let ksp = session.schemaMeta.keyspaceMeta[keyspace] {
         if let tbl = ksp.tableMeta[table] {
             print_table_meta(meta: tbl, indent: 0)
@@ -150,7 +150,7 @@ func print_table(session: Session, keyspace: String, table: String) -> () {
         print("+++ keyspace \"\(keyspace)\" not found")
     }
 }
-func print_function(session: Session, keyspace: String, function: String, arguments: String) -> () {
+func print_function(session: Session, keyspace: String, function: String, arguments: String) {
     print("+++ ")
     if let ksp = session.schemaMeta.keyspaceMeta[keyspace] {
         if let fnc = ksp.functionMeta[function, arguments] {
@@ -162,7 +162,7 @@ func print_function(session: Session, keyspace: String, function: String, argume
         print("+++ keyspace \"\(keyspace)\" not found")
     }
 }
-func print_aggregate(session: Session, keyspace: String, aggregate: String, arguments: String) -> () {
+func print_aggregate(session: Session, keyspace: String, aggregate: String, arguments: String) {
     print("+++ ")
     if let ksp = session.schemaMeta.keyspaceMeta[keyspace] {
         if let agg = ksp.aggregateMeta[aggregate, arguments] {

@@ -18,7 +18,7 @@ func getSession() -> Session {
 }
 
 fileprivate
-func create_keyspace(session: Session) -> () {
+func create_keyspace(session: Session) {
     print("create_keyspace...")
     let query = """
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
@@ -29,7 +29,7 @@ func create_keyspace(session: Session) -> () {
     future.check()
 }
 fileprivate
-func create_table(session: Session) -> () {
+func create_table(session: Session) {
     print("create_table...")
     let query = """
     CREATE TABLE IF NOT EXISTS examples.log (key text, time timeuuid, entry text,
@@ -40,7 +40,7 @@ func create_table(session: Session) -> () {
     future.check()
 }
 fileprivate
-func insert_into(session: Session, key: String, time: UUID, entry: String) -> () {
+func insert_into(session: Session, key: String, time: UUID, entry: String) {
     print("insert_into_log...")
     let query = "INSERT INTO examples.log (key, time, entry) VALUES (?, ?, ?);"
     let statement = SimpleStatement(query,

@@ -27,7 +27,7 @@ struct Credentials: Response {
 }
 
 fileprivate
-func initialCallback(authenticator: Authenticator, response: Response) -> () {
+func initialCallback(authenticator: Authenticator, response: Response) {
     print("initialCallback...")
     print("*** inet=\(authenticator.address)")
     print("*** className=\(authenticator.className)")
@@ -36,24 +36,24 @@ func initialCallback(authenticator: Authenticator, response: Response) -> () {
     print("...initialCallback")
 }
 fileprivate
-func challengeCallback(authenticator: Authenticator, response: Response, token: String?) -> () {
+func challengeCallback(authenticator: Authenticator, response: Response, token: String?) {
     print("challengeCallback...")
     print("token=\"\(token ?? "<nil>")\"")
     print("...challengeCallback")
 }
 fileprivate
-func successCallback(authenticator: Authenticator, response: Response, token: String?) -> () {
+func successCallback(authenticator: Authenticator, response: Response, token: String?) {
     print("successCallback...")
     print("token=\"\(token ?? "<nil>")\"")
     print("...successCallback")
 }
 fileprivate
-func cleanupCallback(authenticator: Authenticator, response: Response) -> () {
+func cleanupCallback(authenticator: Authenticator, response: Response) {
     print("cleanupCallback...")
     print("...cleanupCallback")
 }
 fileprivate
-func dataCleanupCallback(resp: Response) -> () {
+func dataCleanupCallback(resp: Response) {
     print("dataCleanupCallback...")
     print("...dataCleanupCallback")
 }

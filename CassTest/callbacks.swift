@@ -19,7 +19,7 @@ fileprivate let checker = {(_ err: Cass.Error) -> Bool in
     return true
 }
 
-fileprivate func on_finish(_ parm: CallbackData) -> () {
+fileprivate func on_finish(_ parm: CallbackData) {
     defer {
         parm.dealloc(Session.self)
     }
@@ -32,7 +32,7 @@ fileprivate func on_finish(_ parm: CallbackData) -> () {
     print("...on_finish")
 }
 
-fileprivate func on_select(_ parm: CallbackData) -> () {
+fileprivate func on_select(_ parm: CallbackData) {
     defer {
         parm.dealloc(Session.self)
     }
@@ -58,7 +58,7 @@ fileprivate func on_select(_ parm: CallbackData) -> () {
     print("...on_select")
 }
 
-fileprivate func on_insert(_ parm: CallbackData) -> () {
+fileprivate func on_insert(_ parm: CallbackData) {
     defer {
         parm.dealloc(Session.self)
     }
@@ -79,7 +79,7 @@ fileprivate func on_insert(_ parm: CallbackData) -> () {
     print("...on_insert")
 }
 
-fileprivate func on_create_table(_ parm: CallbackData) -> () {
+fileprivate func on_create_table(_ parm: CallbackData) {
     defer {
         parm.dealloc(Session.self)
     }
@@ -105,7 +105,7 @@ fileprivate func on_create_table(_ parm: CallbackData) -> () {
     print("...on_create_table")
 }
 
-fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
+fileprivate func on_create_keyspace(_ parm: CallbackData) {
     defer {
         parm.dealloc(Session.self)
     }
@@ -127,7 +127,7 @@ fileprivate func on_create_keyspace(_ parm: CallbackData) -> () {
     print("...on_create_keyspace")
 }
 
-fileprivate func on_session_connect(_ parm: CallbackData) -> () {
+fileprivate func on_session_connect(_ parm: CallbackData) {
     defer {
         parm.dealloc(Session.self)
     }

@@ -26,7 +26,7 @@ func getSession() -> Session {
 }
 
 fileprivate
-func create_keyspace(session: Session) -> () {
+func create_keyspace(session: Session) {
     print("create_keyspace...")
     let query = """
     CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
@@ -37,7 +37,7 @@ func create_keyspace(session: Session) -> () {
     future.check()
 }
 fileprivate
-func create_table(session: Session) -> () {
+func create_table(session: Session) {
     print("create_table...")
     let query = """
     CREATE TABLE IF NOT EXISTS examples.basic (key text,
@@ -51,7 +51,7 @@ func create_table(session: Session) -> () {
     future.check()
 }
 fileprivate
-func insert_into(session: Session, key: String, basic: Basic) -> () {
+func insert_into(session: Session, key: String, basic: Basic) {
     print("insert_into...")
     let query = "INSERT INTO examples.basic (key, bln, flt, dbl, i32, i64) VALUES (:k, :b, :f, :d, :i32, :i64);"
     let map: [String: Any?] = [
