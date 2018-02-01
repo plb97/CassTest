@@ -187,7 +187,6 @@ func perf() {
     create_table(session: session)
     insert_into(session: session)
 
-    print()
     var run: (Session) -> ()
     switch (DO_SELECTS, USE_PREPARED) {
     case (true, true):
@@ -203,6 +202,7 @@ func perf() {
         print("insert")
         run = insert_into_perf
     }
+    print()
     for i in 0 ..< NUM_THREADS {
         queues.append(DispatchQueue(label: "perf_\(i)", qos: .background))
     }
