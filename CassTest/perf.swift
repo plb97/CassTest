@@ -12,8 +12,9 @@ import Dispatch
 fileprivate let NUM_THREADS = 1
 fileprivate let NUM_IO_WORKER_THREADS = 4
 fileprivate let QUEUE_SIZE_IO = 10000
-fileprivate let NUM_CONCURRENT_REQUESTS = 100//00
-fileprivate let NUM_ITERATIONS = 10//00
+fileprivate let NUM_CONCURRENT_REQUESTS = 1000//0
+fileprivate let NUM_ITERATIONS = 100//0
+fileprivate let DELTA_SECS = 5
 
 fileprivate let DO_SELECTS = true
 fileprivate let USE_PREPARED = true
@@ -215,18 +216,17 @@ func perf() {
             group.leave()
         }
     }
-    let secs = 5
     var metrics = session.metrics
-    var timeout = DispatchTime.now()
-    repeat {
-        timeout = timeout + .seconds(secs)
+    var timeout = DispatchTime.now() + .seconds(DELTA_SECS)
+    while .timedOut == group.wait(timeout: timeout) {
         metrics = session.metrics
         print(String(format:"rate stats (requests/second): mean %f 1m %f 5m %f 15m %f",
                      metrics.requests.mean_rate,
                      metrics.requests.one_minute_rate,
                      metrics.requests.five_minute_rate,
                      metrics.requests.fifteen_minute_rate))
-    } while .timedOut == group.wait(timeout: timeout)
+        timeout = timeout + .seconds(DELTA_SECS)
+    }
     print()
     metrics = session.metrics
     print(String(format:"final stats (microseconds): min %llu max %llu median %llu 75th %llu 95th %llu 98th %llu 99th %llu 99.9th %llu",
