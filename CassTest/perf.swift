@@ -9,24 +9,26 @@
 import Cass
 import Dispatch
 
-fileprivate let USE_PREPARED = true // false
-fileprivate let DO_SELECTS = false // true
-
 fileprivate let NUM_THREADS = 1
 fileprivate let NUM_IO_WORKER_THREADS = 4
-fileprivate let QUEUE_SIZE_IO = 10_000
-fileprivate let NUM_CONCURRENT_REQUESTS = 5//10_000
-fileprivate let NUM_ITERATIONS = 5//1_000
+fileprivate let QUEUE_SIZE_IO = 10000
+fileprivate let NUM_CONCURRENT_REQUESTS = 100//00
+fileprivate let NUM_ITERATIONS = 10//00
+
+fileprivate let DO_SELECTS = true
+fileprivate let USE_PREPARED = true
 
 fileprivate let select_query = "SELECT id, title, album, artist, tags FROM stress.songs WHERE id = a98d21b2-1900-11e4-b97b-e5e358e71e0d;"
-
 fileprivate let insert_query = "INSERT INTO stress.songs (id, title, album, artist, tags) VALUES (?, ?, ?, ?, ?);"
-fileprivate let collection = Set<String>(arrayLiteral: "jazz", "2013")
+
+fileprivate let tags = Set<String>(arrayLiteral: "jazz", "2013")
 fileprivate let big_string = String(repeating: "0123456701234567012345670123456701234567012345670123456701234567", count: 3)
+
+fileprivate var queues = [DispatchQueue]()
 
 fileprivate let checker = {(_ err: Cass.Error) -> Bool in
     if .ok != err {
-        print("*** CHECKER: Error=\(err)")
+        //print("*** CHECKER: Error=\(err)")
         return false
     }
     return true
@@ -80,7 +82,7 @@ func create_table(session: Session) {
     future.check()
 }
 fileprivate func insert_into_perf(session: Session) {
-    print("insert_into_perf")
+    //print("insert_into_perf")
     let gen = UuidGen()
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
@@ -90,19 +92,19 @@ fileprivate func insert_into_perf(session: Session) {
             ,big_string
             ,big_string
             ,big_string
-            ,collection
+            ,tags
         ).setIsIdempotent(true)
         futures.append(session.execute(statement))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
         if !future.wait().check(checker: checker) {
-            print("*** \(future.errorMessage)")
+            //print("*** \(future.errorMessage)")
         }
     }
 }
 fileprivate func insert_into_perf_prepared(session: Session) {
-    print("insert_into_perf_prepared")
+    //print("insert_into_perf_prepared")
     let prepare = session.prepare(insert_query).wait()
     prepare.check()
     let prepared = prepare.prepared
@@ -114,19 +116,19 @@ fileprivate func insert_into_perf_prepared(session: Session) {
             ,big_string
             ,big_string
             ,big_string
-            ,collection
+            ,tags
         ).setIsIdempotent(true)
         futures.append(session.execute(statement))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
         if !future.wait().check(checker: checker) {
-            print("*** \(future.errorMessage)")
+            //print("*** \(future.errorMessage)")
         }
     }
 }
 fileprivate func select_from_perf(session: Session) {
-    print("select_from_perf")
+    //print("select_from_perf")
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
         let statement = SimpleStatement(select_query).setIsIdempotent(true)
@@ -135,12 +137,12 @@ fileprivate func select_from_perf(session: Session) {
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
         if !future.wait().check(checker: checker) {
-            print("*** \(future.errorMessage)")
+            //print("*** \(future.errorMessage)")
         }
     }
 }
 fileprivate func select_from_perf_prepared(session: Session) {
-    print("select_from_perf_prepared")
+    //print("select_from_perf_prepared")
     let prepare = session.prepare(select_query).wait()
     prepare.check()
     let prepared = prepare.prepared
@@ -152,7 +154,7 @@ fileprivate func select_from_perf_prepared(session: Session) {
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
         if !future.wait().check(checker: checker) {
-            print("*** \(future.errorMessage)")
+            //print("*** \(future.errorMessage)")
         }
     }
 }
@@ -164,28 +166,15 @@ func insert_into(session: Session) {
     let title = "La Petite Tonkinoise"
     let album = "Bye Bye Blackbird"
     let artist = "Joséphine Baker"
-    let tags = collection
     let statement = SimpleStatement(insert_query, id, title, album, artist, tags)
     session.execute(statement).wait().check()
     print("...insert_into")
 }
 
-fileprivate func run_select_queries(session: Session) {
-    let select = USE_PREPARED ? select_from_perf_prepared : select_from_perf
-    for _ in 0 ..< NUM_ITERATIONS {
-        select(session)
-    }
-}
-
-fileprivate func run_insert_queries(session: Session) {
-    let insert = USE_PREPARED ? insert_into_perf_prepared : insert_into_perf
-    for _ in 0 ..< NUM_ITERATIONS {
-        insert(session)
-    }
-}
-
 func perf() {
     print("perf...")
+
+    var group = DispatchGroup()
 
     LogMessage.setLevel(.info)
     let session = getSession()
@@ -202,23 +191,57 @@ func perf() {
     //select_from_perf(session: session)
     //select_from_perf_prepared(session: session)
 
-
-    let run = DO_SELECTS ? run_select_queries : run_insert_queries
-    for _ in 0 ..< NUM_THREADS {
-        DispatchQueue.global().async {
-            run(session)
+    print()
+    var run: (Session) -> ()
+    switch (DO_SELECTS, USE_PREPARED) {
+    case (true, true):
+        print("prepared select")
+        run = select_from_perf_prepared
+    case (true, false):
+        print("select")
+        run = select_from_perf
+    case (false, true):
+        print("prepared insert")
+        run = insert_into_perf_prepared
+    case (false, false):
+        print("insert")
+        run = insert_into_perf
+    }
+    for i in 0 ..< NUM_THREADS {
+        queues.append(DispatchQueue(label: "perf_\(i)", qos: .background))
+    }
+    for i in 0 ..< NUM_THREADS {
+        queues[i].async {
+            //print("queue: \(queues[i])")
+            group.enter()
+            for _ in 0 ..< NUM_ITERATIONS {
+                run(session)
+            }
+            group.leave()
         }
     }
-    sleep(5)
-
-    /*
+    let secs = 5
     var metrics = session.metrics
-    for i in 0 ..< 5 {
-        sleep(1)
+    var timeout = DispatchTime.now()
+    repeat {
+        timeout = timeout + .seconds(secs)
         metrics = session.metrics
-        print("\(i) metrics=\(metrics)")
-    }
-    */
-
+        print(String(format:"rate stats (requests/second): mean %f 1m %f 5m %f 15m %f",
+                     metrics.requests.mean_rate,
+                     metrics.requests.one_minute_rate,
+                     metrics.requests.five_minute_rate,
+                     metrics.requests.fifteen_minute_rate))
+    } while .timedOut == group.wait(timeout: timeout)
+    print()
+    metrics = session.metrics
+    print(String(format:"final stats (microseconds): min %llu max %llu median %llu 75th %llu 95th %llu 98th %llu 99th %llu 99.9th %llu",
+                 metrics.requests.min,
+                 metrics.requests.max,
+                 metrics.requests.median,
+                 metrics.requests.percentile_75th,
+                 metrics.requests.percentile_95th,
+                 metrics.requests.percentile_98th,
+                 metrics.requests.percentile_99th,
+                 metrics.requests.percentile_999th))
     print("...perf")
 }
