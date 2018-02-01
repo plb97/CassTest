@@ -186,11 +186,6 @@ func perf() {
     create_table(session: session)
     insert_into(session: session)
 
-    //insert_into_perf(session: session)
-    //insert_into_perf_prepared(session: session)
-    //select_from_perf(session: session)
-    //select_from_perf_prepared(session: session)
-
     print()
     var run: (Session) -> ()
     switch (DO_SELECTS, USE_PREPARED) {
