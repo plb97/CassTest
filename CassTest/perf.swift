@@ -19,9 +19,10 @@ fileprivate let DELTA_SECS = 5
 fileprivate let DO_SELECTS = true
 fileprivate let USE_PREPARED = true
 
-fileprivate let select_query = "SELECT id, title, album, artist, tags FROM stress.songs WHERE id = a98d21b2-1900-11e4-b97b-e5e358e71e0d;"
+fileprivate let select_query = "SELECT id, title, album, artist, tags FROM stress.songs WHERE id = ?;"
 fileprivate let insert_query = "INSERT INTO stress.songs (id, title, album, artist, tags) VALUES (?, ?, ?, ?, ?);"
 
+fileprivate let id = UUID(uuidString: "a98d21b2-1900-11e4-b97b-e5e358e71e0d")!
 fileprivate let tags = Set<String>(arrayLiteral: "jazz", "2013")
 fileprivate let big_string = String(repeating: "0123456701234567012345670123456701234567012345670123456701234567", count: 3)
 
@@ -87,9 +88,8 @@ fileprivate func insert_into_perf(session: Session) {
     let gen = UuidGen()
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
-        let id = gen.time
         let statement = SimpleStatement(insert_query
-            ,id
+            ,gen.time
             ,big_string
             ,big_string
             ,big_string
@@ -112,8 +112,7 @@ fileprivate func insert_into_perf_prepared(session: Session) {
     let gen = UuidGen()
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
-        let id = gen.time
-        let statement = prepared.statement.bind(id
+        let statement = prepared.statement.bind( gen.time
             ,big_string
             ,big_string
             ,big_string
@@ -132,7 +131,7 @@ fileprivate func select_from_perf(session: Session) {
     //print("select_from_perf")
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
-        let statement = SimpleStatement(select_query).setIsIdempotent(true)
+        let statement = SimpleStatement(select_query, id).setIsIdempotent(true)
         futures.append(session.execute(statement))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
@@ -149,7 +148,7 @@ fileprivate func select_from_perf_prepared(session: Session) {
     let prepared = prepare.prepared
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
-        let statement = prepared.statement.bind().setIsIdempotent(true)
+        let statement = prepared.statement.bind(id).setIsIdempotent(true)
         futures.append(session.execute(statement))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
@@ -162,8 +161,6 @@ fileprivate func select_from_perf_prepared(session: Session) {
 fileprivate
 func insert_into(session: Session) {
     print("insert_into...")
-    let id_str = "a98d21b2-1900-11e4-b97b-e5e358e71e0d"
-    let id = UUID(uuidString: id_str)!
     let title = "La Petite Tonkinoise"
     let album = "Bye Bye Blackbird"
     let artist = "Joséphine Baker"
@@ -187,6 +184,7 @@ func perf() {
     create_table(session: session)
     insert_into(session: session)
 
+    print()
     var run: (Session) -> ()
     switch (DO_SELECTS, USE_PREPARED) {
     case (true, true):
@@ -237,5 +235,6 @@ func perf() {
                  metrics.requests.percentile_98th,
                  metrics.requests.percentile_99th,
                  metrics.requests.percentile_999th))
+    print()
     print("...perf")
 }
