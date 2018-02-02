@@ -9,7 +9,7 @@
 import Cass
 import Dispatch
 
-fileprivate let NUM_THREADS = 1
+fileprivate let NUM_THREADS = 2
 fileprivate let NUM_IO_WORKER_THREADS = 4
 fileprivate let QUEUE_SIZE_IO = 10000
 fileprivate let NUM_CONCURRENT_REQUESTS = 1000//0
@@ -208,7 +208,6 @@ func perf() {
     }
     for i in 0 ..< NUM_THREADS {
         queues[i].async {
-            //print("queue: \(queues[i])")
             group.enter()
             for _ in 0 ..< NUM_ITERATIONS {
                 run(session)
