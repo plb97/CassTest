@@ -17,7 +17,7 @@ func getSession() -> Session {
 }
 fileprivate
 func on_log(_ parm: LogCallbackData) {
-    if let log_file = parm.data(as: FileHandle.self) {
+    if let log_file = parm.callback.data(as: FileHandle.self) {
         print("on_log: \(parm.logMessage.severity) \(parm.logMessage.message)")
         log_file.write(Data((parm.logMessage.description+"\n").utf8))
     } else {
@@ -38,13 +38,12 @@ func logging() {
     }
     if let log_file = FileHandle(forWritingAtPath: file) {
         let logCallback = LogCallback(function: on_log, data: log_file)
-        let logCallbackPtr = LogMessage.setCallback(logCallback)
         let session = getSession()
         defer {
             session.close().wait()
             log_file.synchronizeFile()
             log_file.closeFile()
-            logCallback.close(logCallbackPtr, as: FileHandle.self)
+            logCallback.deallocData(as: FileHandle.self)
         }
     } else {
         print("Impossible d'ouvrir le fichier \(file)")
