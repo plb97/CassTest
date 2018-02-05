@@ -114,8 +114,12 @@ func getSession() -> Session {
         .setPrivateKey(key: client_key)
     ssl.check(checker: checker)
     let future = session.connect(Cluster().setContactPoints("127.0.0.1").setSsl(ssl)).wait()
-    future.check(checker: checker)
-    return session
+    if future.check(checker: checker) {
+        return session
+    } else {
+        print("\(future.errorMessage)")
+        fatalError(future.errorMessage)
+    }
 }
 
 fileprivate
@@ -138,9 +142,8 @@ func ssl() {
     }
     let rs = select_from(session: session)
     if let row = rs.first {
-        print("select")
-        let release_version = row.any(0) as! String
-        //let release_version = row.any(name:"release_version") as! String
+        //let release_version = row.any(0) as! String
+        let release_version = row.any(name:"release_version") as! String
         print("release_version: \(release_version)")
     } else {
         fatalError("select error")
