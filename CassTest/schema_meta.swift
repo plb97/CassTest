@@ -21,7 +21,8 @@ fileprivate
 func create_keyspace(session: Session) {
     print("create_keyspace...")
     let query = """
-    CREATE KEYSPACE IF NOT EXISTS examples WITH replication = {
+    CREATE KEYSPACE IF NOT EXISTS
+        examples WITH replication = {
                            'class': 'SimpleStrategy', 'replication_factor': '3' };
     """
     let future = session.execute(SimpleStatement(query)).wait()
@@ -32,7 +33,8 @@ fileprivate
 func create_table(session: Session) {
     print("create_table...")
     let query = """
-    CREATE TABLE IF NOT EXISTS examples.schema_meta (key text,
+    CREATE TABLE IF NOT EXISTS
+        examples.schema_meta (key text,
                   value bigint,
                   PRIMARY KEY (key));
     """
@@ -41,10 +43,22 @@ func create_table(session: Session) {
     future.check()
 }
 fileprivate
+func create_index(session: Session) {
+    print("create_index...")
+    let query = """
+    CREATE INDEX IF NOT EXISTS
+        schema_meta_idx
+                    ON examples.schema_meta (value);
+    """
+    let future = session.execute(SimpleStatement(query)).wait()
+    print("...create_index")
+    future.check()
+}
+fileprivate
 func create_functions(session: Session) {
     print("create_functions...")
     var query = """
-    CREATE OR REPLACE FUNCTION examples.avg_state(state tuple<int, bigint>, val int)
+    CREATE FUNCTION IF NOT EXISTS examples.avg_state(state tuple<int, bigint>, val int)
                   CALLED ON NULL INPUT RETURNS tuple<int, bigint>
                   LANGUAGE java AS
                     'if (val != null) {
@@ -57,20 +71,21 @@ func create_functions(session: Session) {
     var future = session.execute(SimpleStatement(query)).wait()
     future.check()
     query = """
-    CREATE OR REPLACE FUNCTION examples.avg_state(state tuple<int, bigint>, val int)
-    CALLED ON NULL INPUT RETURNS tuple<int, bigint>
-    LANGUAGE java AS
-    'if (val != null) {
-    state.setInt(0, state.getInt(0) + 1);
-    state.setLong(1, state.getLong(1) + val.intValue());
-    }
-    return state;'
-    ;
+    CREATE FUNCTION IF NOT EXISTS
+            examples.avg_final (state tuple<int, bigint>)
+        CALLED ON NULL INPUT RETURNS double
+        LANGUAGE java AS
+            'double r = 0;
+            if (state.getInt(0) == 0) return null;
+            r = state.getLong(1);
+            r /= state.getInt(0);
+            return Double.valueOf(r);';
     """
     future = session.execute(SimpleStatement(query)).wait()
     future.check()
     query = """
-    CREATE OR REPLACE AGGREGATE examples.average(int)
+    CREATE AGGREGATE IF NOT EXISTS
+        examples.average(int)
     SFUNC avg_state STYPE tuple<int, bigint> FINALFUNC avg_final
     INITCOND(0, 0);
     """
@@ -183,6 +198,7 @@ func schema_meta() {
 
     create_keyspace(session: session)
     create_table(session: session)
+    create_index(session: session)
     create_functions(session: session)
 
     print_keyspace(session: session, keyspace: "examples")
