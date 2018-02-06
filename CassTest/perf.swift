@@ -9,7 +9,7 @@
 import Cass
 import Dispatch
 
-fileprivate let NUM_THREADS = 2
+fileprivate let NUM_THREADS = 1
 fileprivate let NUM_IO_WORKER_THREADS = 4
 fileprivate let QUEUE_SIZE_IO = 10000
 fileprivate let NUM_CONCURRENT_REQUESTS = 1000//0
@@ -27,14 +27,6 @@ fileprivate let tags = Set<String>(arrayLiteral: "jazz", "2013")
 fileprivate let big_string = String(repeating: "0123456701234567012345670123456701234567012345670123456701234567", count: 3)
 
 fileprivate var queues = [DispatchQueue]()
-
-fileprivate let checker = {(_ err: Cass.Error) -> Bool in
-    if .ok != err {
-        //print("*** CHECKER: Error=\(err)")
-        return false
-    }
-    return true
-}
 
 fileprivate
 func getSession() -> Session {
@@ -95,11 +87,11 @@ fileprivate func insert_into_perf(session: Session) {
             ,big_string
             ,tags
         ).setIsIdempotent(true)
-        futures.append(session.execute(statement))
+        futures.append(session.execute(statement).setChecker(okChecker))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
-        if !future.wait().check(checker: checker) {
+        if !future.wait().check() {
             //print("*** \(future.errorMessage)")
         }
     }
@@ -118,11 +110,11 @@ fileprivate func insert_into_perf_prepared(session: Session) {
             ,big_string
             ,tags
         ).setIsIdempotent(true)
-        futures.append(session.execute(statement))
+        futures.append(session.execute(statement).setChecker(okChecker))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
-        if !future.wait().check(checker: checker) {
+        if !future.wait().check() {
             //print("*** \(future.errorMessage)")
         }
     }
@@ -132,11 +124,11 @@ fileprivate func select_from_perf(session: Session) {
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
         let statement = SimpleStatement(select_query, id).setIsIdempotent(true)
-        futures.append(session.execute(statement))
+        futures.append(session.execute(statement).setChecker(okChecker))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
-        if !future.wait().check(checker: checker) {
+        if !future.wait().check() {
             //print("*** \(future.errorMessage)")
         }
     }
@@ -149,11 +141,11 @@ fileprivate func select_from_perf_prepared(session: Session) {
     var futures = Array<Future>()
     for _ in 0 ..< NUM_CONCURRENT_REQUESTS {
         let statement = prepared.statement.bind(id).setIsIdempotent(true)
-        futures.append(session.execute(statement))
+        futures.append(session.execute(statement).setChecker(okChecker))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
-        if !future.wait().check(checker: checker) {
+        if !future.wait().check() {
             //print("*** \(future.errorMessage)")
         }
     }

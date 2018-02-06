@@ -10,20 +10,13 @@ import Cass
 import Dispatch
 
 fileprivate var group: DispatchGroup = DispatchGroup()
-fileprivate let checker = {(_ err: Cass.Error) -> Bool in
-    if .ok != err {
-        print("*** CHECKER: Error=\(err)")
-        return false
-    }
-    return true
-}
 
 fileprivate func on_finish(_ parm: CallbackData) {
     defer {
         parm.callback.deallocData(as: Session.self)
     }
     print("on_finish...")
-    if !(parm.future.check(checker: checker)) {
+    if !(parm.future.setChecker(okPrintChecker).check()) {
         print("*** \(parm.future.errorMessage)")
         defer {
             group.leave()
@@ -40,7 +33,7 @@ fileprivate func on_select(_ parm: CallbackData) {
     }
     let query = "USE examples;"
     print("on_select...")
-    if !(parm.future.check(checker: checker)) {
+    if !(parm.future.setChecker(okPrintChecker).check()) {
         print("*** \(parm.future.errorMessage)")
         defer {
             group.leave()
@@ -68,7 +61,7 @@ fileprivate func on_insert(_ parm: CallbackData) {
         parm.callback.deallocData(as: Session.self)
     }
     print("on_insert...")
-    if !(parm.future.check(checker: checker)) {
+    if !(parm.future.setChecker(okPrintChecker).check()) {
         print("*** \(parm.future.errorMessage)")
         defer {
             group.leave()
@@ -92,7 +85,7 @@ fileprivate func on_create_table(_ parm: CallbackData) {
         parm.callback.deallocData(as: Session.self)
     }
     print("on_create_table...")
-    if !(parm.future.check(checker: checker)) {
+    if !(parm.future.setChecker(okPrintChecker).check()) {
         print("*** \(parm.future.errorMessage)")
         defer {
             group.leave()
@@ -121,7 +114,7 @@ fileprivate func on_create_keyspace(_ parm: CallbackData) {
         parm.callback.deallocData(as: Session.self)
     }
     print("on_create_keyspace...")
-    if !(parm.future.check(checker: checker)) {
+    if !(parm.future.setChecker(okPrintChecker).check()) {
         print("*** \(parm.future.errorMessage)")
         defer {
             group.leave()
@@ -146,7 +139,7 @@ fileprivate func on_session_connect(_ parm: CallbackData) {
         parm.callback.deallocData(as: Session.self)
     }
     print("on_session_connect...")
-    if !(parm.future.check(checker: checker)) {
+    if !(parm.future.setChecker(okPrintChecker).check()) {
         print("*** \(parm.future.errorMessage)")
         defer {
             group.leave()

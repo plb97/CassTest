@@ -112,9 +112,12 @@ func getSession() -> Session {
         .addTrustedCert(server_cert)
         .setCert(client_cert)
         .setPrivateKey(key: client_key)
-    ssl.check(checker: checker)
-    let future = session.connect(Cluster().setContactPoints("127.0.0.1").setSsl(ssl)).wait()
-    if future.check(checker: checker) {
+        .setChecker(okPrintChecker)
+    ssl.check()
+    let future = session.connect(Cluster().setContactPoints("127.0.0.1").setSsl(ssl))
+        .setChecker(okPrintChecker)
+        .wait()
+    if future.check() {
         return session
     } else {
         print("\(future.errorMessage)")
@@ -125,8 +128,10 @@ func getSession() -> Session {
 fileprivate
 func select_from(session: Session) -> Result {
     let query = "SELECT release_version FROM system.local;"
-    let future = session.execute(SimpleStatement(query)).wait()
-    if future.check(checker: checker) {
+    let future = session.execute(SimpleStatement(query))
+        .setChecker(okPrintChecker)
+        .wait()
+    if future.check() {
         return future.result
     } else {
         print("\(future.errorMessage)")

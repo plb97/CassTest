@@ -11,14 +11,6 @@ import Cass
 fileprivate let KEY = "async_test"
 fileprivate let NUM_CONCURRENT_REQUESTS = 1_000
 
-fileprivate let checker = {(_ err: Cass.Error) -> Bool in
-    if .ok != err {
-        print("*** CHECKER: Error=\(err)")
-        return false
-    }
-    return true
-}
-
 fileprivate
 func getSession() -> Session {
     let session = Session()
@@ -66,11 +58,11 @@ func insert_into(session: Session, key: String) {
                                         ,Int32(i) * 10 // i32
                                         ,Int64(i) * 100 // i64
         )
-        futures.append(session.execute(statement))
+        futures.append(session.execute(statement).setChecker(okPrintChecker))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
-        if !future.wait().check(checker: checker) {
+        if !future.wait().check() {
             print("*** \(future.errorMessage)")
         }
     }

@@ -11,14 +11,6 @@ import Cass
 fileprivate let NUM_CONCURRENT_REQUESTS = 17
 fileprivate let PAGING_SIZE: Int32 = 7
 
-fileprivate let checker = {(_ err: Cass.Error) -> Bool in
-    if .ok != err {
-        print("*** CHECKER: Error=\(err)")
-        return false
-    }
-    return true
-}
-
 fileprivate
 func getSession() -> Session {
     let session = Session()
@@ -59,11 +51,11 @@ func insert_into(session: Session) {
         let value = String(format:"%03d",i)
 //        print("insert_into: key: \(key) value: '\(value)'")
         let statement = SimpleStatement(query, key, value)
-        futures.append(session.execute(statement))
+        futures.append(session.execute(statement).setChecker(okPrintChecker))
     }
     for i in 0 ..< NUM_CONCURRENT_REQUESTS {
         let future = futures[i]
-        future.wait().check(checker: checker)
+        future.wait().check()
     }
     print("...insert_into")
 }

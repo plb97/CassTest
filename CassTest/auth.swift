@@ -65,14 +65,18 @@ func getSession(authenticatorCallbacks: AuthenticatorCallbacks) -> Session {
         .setContactPoints("127.0.0.1")
 //        .setCredentials()
         .setAuthenticatorCallbacks(authenticatorCallbacks)
-        ).check()
+        )
+        .wait().check()
     return session
 }
 fileprivate
 func select_from(session: Session) {
     let query = "SELECT release_version FROM system.local;"
-    let future = session.execute(SimpleStatement(query)).wait()
-    future.check()
+    let future = session.execute(SimpleStatement(query)).setChecker(okPrintChecker).wait()
+    if !future.check() {
+        print(future.errorMessage)
+        fatalError(future.errorMessage)
+    }
     let rs = future.result
     if let row = rs.first {
         print("select")

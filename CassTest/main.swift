@@ -7,7 +7,7 @@
 //
 
 print("*** start")
-
+/*
 async()
 auth()
 basic()
@@ -26,10 +26,11 @@ perf()
 prepared()
 schema_meta()
 simple()
-//ssl() // a besoin d'un conteneur avec SSL configure (voir NOTES.md)
 tuple()
 udt()
 uuids()
+*/
+ssl() // a besoin d'un cassnadra avec SSL configure (voir NOTES.md)
 
 print("*** end")
 
