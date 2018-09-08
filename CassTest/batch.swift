@@ -11,7 +11,7 @@ import Cass
 fileprivate
 func getSession() -> Session {
     let session = Session()
-    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials()).wait().check()
+    session.connect(Cluster().setContactPoints(HOSTS).setCredentials()).wait().check()
     return session
 }
 

@@ -6,9 +6,14 @@
 //  Copyright © 2017 PLHB. All rights reserved.
 //
 
+fileprivate let DOCKER="127.0.0.1"
+fileprivate let RASPBERRY="10.0.1.121"
+let HOSTS=RASPBERRY
+
 print("*** start")
-/*
-async()
+
+
+/*async()
 auth()
 basic()
 batch()
@@ -24,13 +29,13 @@ named_parameters()
 paging()
 perf()
 prepared()
-schema_meta()
+schema_meta()*/
 simple()
-tuple()
+/*tuple()
 udt()
-uuids()
-*/
-ssl() // a besoin d'un cassnadra avec SSL configure (voir NOTES.md)
+uuids()*/
+
+//ssl() // a besoin d'un cassnadra avec SSL configure (voir NOTES.md)
 
 print("*** end")
 

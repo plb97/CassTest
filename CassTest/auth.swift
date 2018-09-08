@@ -62,7 +62,7 @@ func getSession(authenticatorCallbacks: AuthenticatorCallbacks) -> Session {
     let session = Session()
     session.connect(Cluster()
 //        .setContactPoints("127.0.0.1,127.0.0.2,127.0.0.3")
-        .setContactPoints("127.0.0.1")
+        .setContactPoints(HOSTS)
 //        .setCredentials()
         .setAuthenticatorCallbacks(authenticatorCallbacks)
         )

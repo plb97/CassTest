@@ -32,7 +32,7 @@ fileprivate
 func getSession() -> Session {
     let session = Session()
     session.connect(Cluster()
-        .setContactPoints("127.0.0.1")
+        .setContactPoints(HOSTS)
         .setCredentials()
         .setNumThreadsIo(NUM_IO_WORKER_THREADS)
         .setQueueSizeIo(QUEUE_SIZE_IO)

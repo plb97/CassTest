@@ -114,7 +114,7 @@ func getSession() -> Session {
         .setPrivateKey(key: client_key)
         .setChecker(okPrintChecker)
     ssl.check()
-    let future = session.connect(Cluster().setContactPoints("127.0.0.1").setSsl(ssl))
+    let future = session.connect(Cluster().setContactPoints(HOSTS).setSsl(ssl))
         .setChecker(okPrintChecker)
         .wait()
     if future.check() {

@@ -167,7 +167,7 @@ func callbacks() {
     }
     let callback = Callback(callback: on_session_connect, data: session)
     group.enter()
-    session.connect(Cluster().setContactPoints("127.0.0.1").setCredentials(), callback: callback)
+    session.connect(Cluster().setContactPoints(HOSTS).setCredentials(), callback: callback)
     print("waiting")
     group.wait()
     print("...callbacks")
